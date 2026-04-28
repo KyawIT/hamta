@@ -1,0 +1,283 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #f2ca50;
+  --color-primary-container: #d4af37;
+  --color-primary-dim: #c9a227;
+  --color-surface: #131313;
+  --color-surface-low: #0e0e0e;
+  --color-surface-high: #1e1e1e;
+  --color-surface-higher: #2a2a2a;
+  --color-surface-variant: #353535;
+  --color-on-surface: #e5e2e1;
+  --color-on-surface-dim: #c8c6c5;
+  --color-secondary: #c8c6c5;
+  --color-outline: #99907c;
+  --color-outline-dim: #4a4640;
+
+  --font-serif: var(--font-noto-serif), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-manrope), system-ui, -apple-system, sans-serif;
+
+  --radius-sm: 0.125rem;
+  --radius-none: 0;
+}
+
+/* ─── Base ─────────────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: #131313;
+  color: #e5e2e1;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #131313;
+  color: #e5e2e1;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* ─── Selection ─────────────────────────────────────────────────────────────── */
+
+::selection {
+  background-color: #f2ca5033;
+  color: #f2ca50;
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0e0e0e;
+}
+::-webkit-scrollbar-thumb {
+  background: #353535;
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #f2ca50;
+}
+
+/* ─── Animations ────────────────────────────────────────────────────────────── */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scrollBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+@keyframes shimmerGold {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ─── Utility classes ───────────────────────────────────────────────────────── */
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-fade-in-right {
+  animation: fadeInRight 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.animate-scroll-bounce {
+  animation: scrollBounce 1.8s ease-in-out infinite;
+}
+
+.animate-shimmer-gold {
+  animation: shimmerGold 2.5s ease-in-out infinite;
+}
+
+/* ─── Glass ─────────────────────────────────────────────────────────────────── */
+
+.glass {
+  background: rgba(30, 30, 30, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-dark {
+  background: rgba(14, 14, 14, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ─── Gold gradient button ──────────────────────────────────────────────────── */
+
+.btn-gold {
+  background: linear-gradient(135deg, #f2ca50 0%, #d4af37 100%);
+  color: #131313;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  padding: 0.875rem 2rem;
+  border-radius: 0.125rem;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.btn-gold:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #e5e2e1;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  padding: 0.875rem 2rem;
+  border-radius: 0.125rem;
+  border: 1px solid rgba(229, 226, 225, 0.25);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.btn-outline:hover {
+  border-color: #f2ca50;
+  color: #f2ca50;
+  transform: translateY(-1px);
+}
+
+/* ─── Section label ─────────────────────────────────────────────────────────── */
+
+.section-label {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #f2ca50;
+}
+
+/* ─── Gold accent line ──────────────────────────────────────────────────────── */
+
+.gold-line {
+  width: 3rem;
+  height: 1px;
+  background: linear-gradient(90deg, #f2ca50, transparent);
+}
+
+/* ─── Menu item separator (tonal shift) ──────────────────────────────────────── */
+
+.tonal-divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ─── Hover image zoom ───────────────────────────────────────────────────────── */
+
+.img-zoom {
+  overflow: hidden;
+}
+
+.img-zoom img {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.img-zoom:hover img {
+  transform: scale(1.06);
+}
+
+/* ─── Instagram embed reset ──────────────────────────────────────────────────── */
+
+.instagram-media {
+  border-radius: 0 !important;
+  min-width: unset !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
