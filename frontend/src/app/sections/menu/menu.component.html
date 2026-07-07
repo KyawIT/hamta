@@ -1,0 +1,17 @@
+<section id="menu" class="relative py-24 lg:py-36 bg-[#0e0e0e]">
+  <div class="max-w-7xl mx-auto px-5 lg:px-10">
+    <div appFadeIn class="max-w-2xl mb-14 lg:mb-20"><app-section-label class="block mb-6">Unsere Speisekarte</app-section-label><h2 class="text-4xl lg:text-5xl mb-5 text-[#e5e2e1]">Gerichte mit <em class="italic text-[#f2ca50]">Geschichte</em></h2><p class="text-base leading-7 text-[#4a4640]">Jede Zutat wird sorgfältig ausgewählt, jedes Gericht täglich frisch zubereitet. Kein Gefrierfach, keine Kompromisse.</p></div>
+    <div appFadeIn [fadeDelay]="100"><div class="flex flex-wrap gap-1 mb-10 p-1 w-full lg:w-auto lg:inline-flex bg-[#1e1e1e] rounded-[.125rem]">
+      @for (category of categories; track category.id) { <button type="button" (click)="activeTab.set(category.id)" class="px-5 py-2.5 text-xs font-semibold uppercase tracking-widest transition-all duration-200 rounded-[.125rem] [letter-spacing:.08em]" [class.bg-[#f2ca50]]="activeTab() === category.id" [class.text-[#131313]]="activeTab() === category.id" [class.text-[#4a4640]]="activeTab() !== category.id">{{ category.label }}</button> }
+    </div></div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-x-16">
+      @for (item of active().items; track item.name; let i = $index) {
+        <div appFadeIn [fadeDelay]="i * 60" class="flex items-start justify-between gap-6 py-5 border-b border-white/5">
+          <div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><h3 class="text-base font-semibold font-serif" [class.text-[#f2ca50]]="item.highlight" [class.text-[#e5e2e1]]="!item.highlight">{{ item.name }}</h3>@if (item.highlight) { <span class="text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5 bg-[rgba(242,202,80,.12)] text-[#f2ca50] rounded-[.125rem]">Beliebt</span> }</div><p class="text-sm leading-relaxed text-[#4a4640]">{{ item.description }}</p></div>
+          <span class="text-base font-semibold shrink-0 font-serif text-[#f2ca50] min-w-16 text-right">{{ item.price }}</span>
+        </div>
+      }
+    </div>
+    <div appFadeIn [fadeDelay]="300" class="mt-14"><div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-8 bg-[#1e1e1e] rounded-[.125rem]"><div><h3 class="text-lg font-semibold mb-1 font-serif text-[#e5e2e1]">Vollständige Karte &amp; Tagesgerichte</h3><p class="text-sm text-[#4a4640]">Unsere Speisekarte wird regelmäßig erweitert. Fragen Sie uns nach den Tagesangeboten.</p></div><a href="tel:+43732000000" class="btn-gold shrink-0"><svg lucidePhone [size]="14" [strokeWidth]="2.5"></svg>Jetzt anrufen</a></div></div>
+  </div>
+</section>
