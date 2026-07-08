@@ -145,17 +145,28 @@
   color: var(--color-primary);
 }
 
-.admin__user {
-  display: flex;
+.admin__logout {
+  display: inline-flex;
   align-items: center;
-}
-
-.admin__user-name {
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-on-surface-dim);
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-outline);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.admin__logout:hover {
+  border-color: rgba(201, 134, 47, 0.45);
+  color: var(--color-primary);
 }
 
 .admin__content {

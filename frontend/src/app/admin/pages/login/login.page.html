@@ -1,0 +1,62 @@
+<div class="login">
+  <div class="login__glow" aria-hidden="true"></div>
+
+  <div class="login__card">
+    <div class="login__brand">
+      <span class="login__logo text-gold-gradient">HAMTA</span>
+      <span class="login__tag">Adminbereich</span>
+    </div>
+
+    <div class="login__lock">
+      <svg lucideLock [size]="18"></svg>
+      <span>Geschützter Bereich</span>
+    </div>
+
+    <form class="login__form" (ngSubmit)="submit()">
+      <div>
+        <label class="form-label" for="login-user">Benutzername</label>
+        <input
+          id="login-user"
+          class="form-control"
+          type="text"
+          autocomplete="username"
+          placeholder="admin"
+          [ngModel]="username()"
+          (ngModelChange)="username.set($event)"
+          name="username"
+          [disabled]="submitting()"
+        />
+      </div>
+
+      <div>
+        <label class="form-label" for="login-pass">Passwort</label>
+        <input
+          id="login-pass"
+          class="form-control"
+          type="password"
+          autocomplete="current-password"
+          placeholder="••••••••"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          name="password"
+          [disabled]="submitting()"
+        />
+      </div>
+
+      @if (error()) {
+        <p class="login__error">{{ error() }}</p>
+      }
+
+      <button class="btn-gold login__submit" type="submit" [disabled]="submitting()">
+        @if (submitting()) {
+          <svg lucideLoaderCircle [size]="15" class="login__spin"></svg>
+          Anmelden…
+        } @else {
+          Anmelden
+        }
+      </button>
+    </form>
+
+    <a class="login__back" href="/">← Zurück zur Website</a>
+  </div>
+</div>

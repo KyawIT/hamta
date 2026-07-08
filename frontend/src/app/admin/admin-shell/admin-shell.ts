@@ -1,13 +1,16 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {
   LucideCalendarCheck,
   LucideLayoutDashboard,
+  LucideLogOut,
   LucidePanelLeft,
   LucideSettings,
   LucideUtensilsCrossed,
 } from '@lucide/angular';
+
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-admin-shell',
@@ -17,6 +20,7 @@ import {
     RouterOutlet,
     LucideCalendarCheck,
     LucideLayoutDashboard,
+    LucideLogOut,
     LucidePanelLeft,
     LucideSettings,
     LucideUtensilsCrossed,
@@ -29,6 +33,8 @@ export class AdminShell implements OnInit, OnDestroy {
   readonly sidebarOpen = signal(false);
 
   private readonly meta = inject(Meta);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
   private previousRobots: string | null = null;
 
   ngOnInit(): void {
@@ -51,5 +57,10 @@ export class AdminShell implements OnInit, OnDestroy {
 
   closeSidebar(): void {
     this.sidebarOpen.set(false);
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/admin/login']);
   }
 }

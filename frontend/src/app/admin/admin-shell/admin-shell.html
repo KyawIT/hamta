@@ -59,9 +59,10 @@
       <button class="admin__burger" type="button" (click)="toggleSidebar()" aria-label="Menü">
         <svg lucidePanelLeft [size]="20"></svg>
       </button>
-      <div class="admin__user">
-        <span class="admin__user-name">Angemeldet</span>
-      </div>
+      <button class="admin__logout" type="button" (click)="logout()">
+        <svg lucideLogOut [size]="16"></svg>
+        <span>Abmelden</span>
+      </button>
     </header>
 
     <main class="admin__content">

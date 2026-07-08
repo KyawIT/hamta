@@ -1,11 +1,18 @@
 import { Routes } from '@angular/router';
 
 import { AdminShell } from './admin-shell/admin-shell';
+import { authGuard } from './auth/auth.guard';
 
 export const adminRoutes: Routes = [
   {
+    path: 'login',
+    title: 'Anmelden | Hamta Admin',
+    loadComponent: () => import('./pages/login/login.page').then((m) => m.LoginPage),
+  },
+  {
     path: '',
     component: AdminShell,
+    canActivate: [authGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       {
