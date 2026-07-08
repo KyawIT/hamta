@@ -1,6 +1,6 @@
 package at.hamta.resource;
 
-import at.hamta.entity.Vorspeise;
+import at.hamta.entity.Starter;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -8,39 +8,41 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-@Path("/api/vorspeisen")
+@Path("/api/starters")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class VorspeiseResource {
+public class StarterResource {
 
     @GET
-    public List<Vorspeise> getAll() {
-        return Vorspeise.listAll();
+    public List<Starter> getAll() {
+        return Starter.listAll();
     }
 
     @GET
     @Path("/{id}")
-    public Vorspeise getById(@PathParam("id") Long id) {
-        return Vorspeise.findById(id);
+    public Starter getById(@PathParam("id") Long id) {
+        return Starter.findById(id);
     }
 
     @POST
     @Transactional
-    public Response create(Vorspeise vorspeise) {
-        vorspeise.persist();
-        return Response.status(Response.Status.CREATED).entity(vorspeise).build();
+    public Response create(Starter starter) {
+        starter.persist();
+        return Response.status(Response.Status.CREATED).entity(starter).build();
     }
 
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response update(@PathParam("id") Long id, Vorspeise updated) {
-        Vorspeise existing = Vorspeise.findById(id);
+    public Response update(@PathParam("id") Long id, Starter updated) {
+        Starter existing = Starter.findById(id);
         if (existing == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         existing.name = updated.name;
-        existing.imageUrl = updated.imageUrl;
+        existing.image = updated.image;
+        existing.zutaten = updated.zutaten;
+        existing.preis = updated.preis;
         return Response.ok(existing).build();
     }
 
@@ -48,7 +50,7 @@ public class VorspeiseResource {
     @Path("/{id}")
     @Transactional
     public Response delete(@PathParam("id") Long id) {
-        boolean deleted = Vorspeise.deleteById(id);
+        boolean deleted = Starter.deleteById(id);
         return deleted
                 ? Response.noContent().build()
                 : Response.status(Response.Status.NOT_FOUND).build();
