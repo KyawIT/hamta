@@ -1,8 +1,6 @@
 package at.hamta.resource;
 
-import at.hamta.entity.Hauptspeise;
-import at.hamta.entity.Nachspeise;
-import at.hamta.entity.Vorspeise;
+import at.hamta.entity.*;
 import at.hamta.service.ImageService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -20,22 +18,17 @@ import java.util.Set;
 public class ImageUploadResource {
 
     private static final Set<String> ALLOWED_CATEGORIES = Set.of(
-            "vorspeise", "hauptspeise", "nachspeise"
+            "starter", "main-course", "dessert", "cocktail", "beverage"
     );
 
     @Inject
     ImageService imageService;
 
     /**
-     * Lädt ein Bild für ein Gericht hoch.
+     * Lädt ein Bild hoch, speichert es in der image-Tabelle und
+     * verknüpft die image_id mit dem jeweiligen Eintrag.
      *
-     * POST /api/images/upload/{category}/{gerichtId}
-     *
-     * Multipart-Form:
-     *   file  - Das Bild (JPEG, PNG, WebP, ...)
-     *
-     * Speichert das konvertierte WebP in MinIO und schreibt
-     * die URL in die image_url-Spalte des Gerichts.
+     * POST /api/images/upload/{category}/{id}
      */
     @POST
     @Path("/upload/{category}/{id}")
@@ -49,13 +42,13 @@ public class ImageUploadResource {
 
         if (!ALLOWED_CATEGORIES.contains(category)) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"Ungültige Kategorie. Erlaubt: vorspeise, hauptspeise, nachspeise\"}")
+                    .entity("{\"error\": \"Invalid category. Allowed: starter, main-course, dessert, cocktail, beverage\"}")
                     .build();
         }
 
         if (file == null || file.size() == 0) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"Keine Datei übermittelt\"}")
+                    .entity("{\"error\": \"No file provided\"}")
                     .build();
         }
 
@@ -67,46 +60,63 @@ public class ImageUploadResource {
             );
         } catch (IOException e) {
             return Response.serverError()
-                    .entity("{\"error\": \"Fehler beim Lesen der Datei: " + e.getMessage() + "\"}")
+                    .entity("{\"error\": \"Error reading file: " + e.getMessage() + "\"}")
                     .build();
         } catch (Exception e) {
             return Response.serverError()
-                    .entity("{\"error\": \"Fehler beim Verarbeiten des Bildes: " + e.getMessage() + "\"}")
+                    .entity("{\"error\": \"Error processing image: " + e.getMessage() + "\"}")
                     .build();
         }
 
-        // image_url in der entsprechenden Tabelle aktualisieren
-        String updatedUrl = setImageUrl(category, id, imageUrl);
-        if (updatedUrl == null) {
+        // Image-Datensatz anlegen
+        Image image = new Image();
+        image.url = imageUrl;
+        image.persist();
+
+        // image_id verknüpfen
+        boolean found = linkImage(category, id, image);
+        if (!found) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"Gericht nicht gefunden\"}")
+                    .entity("{\"error\": \"Entry not found\"}")
                     .build();
         }
 
-        return Response.ok("{\"imageUrl\": \"" + imageUrl + "\"}").build();
+        return Response.ok("{\"imageId\": " + image.id + ", \"imageUrl\": \"" + imageUrl + "\"}").build();
     }
 
-    private String setImageUrl(String category, Long id, String imageUrl) {
+    private boolean linkImage(String category, Long id, Image image) {
         return switch (category) {
-            case "vorspeise" -> {
-                Vorspeise entity = Vorspeise.findById(id);
-                if (entity == null) yield null;
-                entity.imageUrl = imageUrl;
-                yield imageUrl;
+            case "starter" -> {
+                Starter entity = Starter.findById(id);
+                if (entity == null) yield false;
+                entity.image = image;
+                yield true;
             }
-            case "hauptspeise" -> {
-                Hauptspeise entity = Hauptspeise.findById(id);
-                if (entity == null) yield null;
-                entity.imageUrl = imageUrl;
-                yield imageUrl;
+            case "main-course" -> {
+                MainCourse entity = MainCourse.findById(id);
+                if (entity == null) yield false;
+                entity.image = image;
+                yield true;
             }
-            case "nachspeise" -> {
-                Nachspeise entity = Nachspeise.findById(id);
-                if (entity == null) yield null;
-                entity.imageUrl = imageUrl;
-                yield imageUrl;
+            case "dessert" -> {
+                Dessert entity = Dessert.findById(id);
+                if (entity == null) yield false;
+                entity.image = image;
+                yield true;
             }
-            default -> null;
+            case "cocktail" -> {
+                Cocktail entity = Cocktail.findById(id);
+                if (entity == null) yield false;
+                entity.image = image;
+                yield true;
+            }
+            case "beverage" -> {
+                Beverage entity = Beverage.findById(id);
+                if (entity == null) yield false;
+                entity.image = image;
+                yield true;
+            }
+            default -> false;
         };
     }
 }
