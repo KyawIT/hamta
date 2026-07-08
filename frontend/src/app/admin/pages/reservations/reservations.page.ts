@@ -1,0 +1,21 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'app-admin-reservations',
+  template: `
+    <header class="mb-8">
+      <p class="section-label mb-2">Verwaltung</p>
+      <h1 class="font-serif text-2xl font-semibold text-on-surface">Reservierungen</h1>
+    </header>
+
+    <div
+      class="rounded-sm border border-dashed border-white/10 bg-surface-high p-10 text-center"
+    >
+      <p class="text-sm text-outline-dim">
+        Reservierungen erscheinen hier, sobald das Backend die Buchungen bereitstellt.
+      </p>
+    </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ReservationsPage {}
