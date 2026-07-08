@@ -1,0 +1,53 @@
+<header
+  class="header-shell fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+  [class.header-scrolled]="scrolled()"
+>
+  <div class="max-w-7xl mx-auto px-5 lg:px-10 h-16 lg:h-20 flex items-center justify-between">
+    <a href="#start" class="flex items-center gap-3 group" (click)="closeMobile()">
+      <div class="relative w-8 h-11 lg:w-10 lg:h-14">
+        <img src="/logo.png" alt="Hamta Restaurant" class="absolute inset-0 w-full h-full object-contain" />
+      </div>
+      <span class="hidden sm:block font-serif text-base tracking-[.16em] uppercase text-[#eee7df]">Hamta</span>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-8" aria-label="Hauptnavigation">
+      @for (link of navLinks; track link.href) {
+        <a [href]="link.href" class="text-xs font-semibold tracking-widest uppercase text-[#aaa199] hover:text-[#d89a4b] transition-colors duration-200 [letter-spacing:0.1em]">{{ link.label }}</a>
+      }
+    </nav>
+
+    <div class="hidden lg:flex items-center gap-4">
+      <a href="tel:+43732000000" class="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-[#d89a4b] hover:text-[#f0b96d] transition-colors duration-200 [letter-spacing:0.1em]">
+        <svg lucidePhone [size]="13" [strokeWidth]="2.5"></svg>
+        Jetzt anrufen
+      </a>
+    </div>
+
+    <button class="lg:hidden flex items-center justify-center w-10 h-10 text-[#e5e2e1]" type="button" (click)="toggleMobile()" [attr.aria-expanded]="mobileOpen()" aria-controls="mobile-menu" [attr.aria-label]="mobileOpen() ? 'Menü schließen' : 'Menü öffnen'">
+      @if (mobileOpen()) { <svg lucideX [size]="22"></svg> } @else { <svg lucideMenu [size]="22"></svg> }
+    </button>
+  </div>
+</header>
+
+@if (mobileOpen()) {
+  <div id="mobile-menu" class="mobile-menu-overlay fixed inset-0 z-[60] flex flex-col lg:hidden">
+    <div class="h-16 flex items-center justify-between px-5">
+      <div class="relative w-8 h-11">
+        <img src="/logo.png" alt="Hamta Restaurant" class="absolute inset-0 w-full h-full object-contain" />
+      </div>
+      <button type="button" (click)="closeMobile()" class="flex items-center justify-center w-10 h-10 text-[#e5e2e1]" aria-label="Menü schließen">
+        <svg lucideX [size]="22"></svg>
+      </button>
+    </div>
+    <nav class="flex flex-col justify-center flex-1 px-8 gap-1" aria-label="Mobile Navigation">
+      @for (link of navLinks; track link.href; let i = $index) {
+        <a [href]="link.href" (click)="closeMobile()" class="py-5 text-3xl font-medium border-b border-[rgba(201,134,47,.16)] text-[#eee7df] hover:text-[#d89a4b] transition-colors duration-150 font-serif" [style.animation-delay.ms]="i * 60">{{ link.label }}</a>
+      }
+      <a href="tel:+43732000000" class="mt-8 btn-gold self-start" (click)="closeMobile()">
+        <svg lucidePhone [size]="14" [strokeWidth]="2.5"></svg>
+        Jetzt anrufen
+      </a>
+    </nav>
+    <div class="px-8 pb-10 text-xs text-[#aaa199]">Hauptstraße 42, 4040 Linz · Di–So 11–22 Uhr</div>
+  </div>
+}

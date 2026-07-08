@@ -1,0 +1,21 @@
+.header-shell {
+  border-bottom: 1px solid rgba(201, 134, 47, .14);
+  background: rgba(19, 19, 19, .48);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+}
+
+.header-shell.header-scrolled {
+  border-bottom-color: rgba(201, 134, 47, .24);
+  background: rgba(14, 14, 14, .84);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .24);
+}
+
+.mobile-menu-overlay {
+  border: 1px solid rgba(201, 134, 47, .18);
+  background:
+    linear-gradient(150deg, rgba(50, 35, 22, .28), transparent 54%),
+    rgba(14, 14, 14, .88);
+  backdrop-filter: blur(24px) saturate(125%);
+  -webkit-backdrop-filter: blur(24px) saturate(125%);
+}

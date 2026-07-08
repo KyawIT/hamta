@@ -1,0 +1,25 @@
+.mobile-nav-glass {
+  border-top: 1px solid rgba(201, 134, 47, .24);
+  background: rgba(18, 18, 18, .8);
+  backdrop-filter: blur(20px) saturate(125%);
+  -webkit-backdrop-filter: blur(20px) saturate(125%);
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, .3);
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.75rem 0;
+  transition: color 0.15s;
+}
+
+.mobile-nav-item span {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}

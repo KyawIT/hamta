@@ -1,0 +1,28 @@
+<section id="start" class="relative min-h-screen min-h-[100svh] flex flex-col justify-center overflow-hidden bg-[#131313]">
+  <div class="absolute inset-0 z-0">
+    <div appParallax [parallaxSpeed]="0.14" class="absolute -inset-y-[12%] inset-x-0 will-change-transform">
+      <img src="/assets/Image3.jpeg" alt="Mehrere frisch gebackene Pizzen im Hamta Restaurant" fetchpriority="high" class="h-full w-full object-cover object-center brightness-[.52]" />
+    </div>
+    <div class="absolute inset-0 [background:linear-gradient(to_bottom,rgba(19,19,19,.4)_0%,rgba(19,19,19,.48)_42%,rgba(19,19,19,.9)_82%,#131313_100%)]"></div>
+    <div class="absolute inset-0 [background:linear-gradient(to_right,rgba(13,13,13,.9)_0%,rgba(13,13,13,.68)_44%,rgba(13,13,13,.12)_85%)]"></div>
+    <div class="absolute inset-0 opacity-25 [background:linear-gradient(115deg,transparent_42%,rgba(201,134,47,.2)_100%)]"></div>
+  </div>
+  <div class="relative z-10 max-w-7xl mx-auto px-5 lg:px-10 w-full pt-24 pb-32 lg:pt-32 lg:pb-40">
+    <div class="max-w-3xl">
+      <div class="hero-animate hero-delay-1 flex items-center gap-3 mb-7"><span class="section-label">Ristorante · Pizzeria · Linz-Urfahr</span></div>
+      <h1 class="hero-animate hero-delay-2 font-serif text-[#f4eee7] font-semibold leading-[.94] [font-size:clamp(3.5rem,8vw,7rem)] [letter-spacing:-.045em]">Hamta<br/><em class="italic font-normal text-gold-gradient">Cucina Italiana</em></h1>
+      <p class="hero-animate hero-delay-3 mt-7 text-lg lg:text-xl leading-relaxed text-[#ded7cf] font-normal max-w-[540px]">Eine moderne Trattoria für lange Abende, ehrliche Zutaten und italienische Klassiker.</p>
+      <p class="hero-animate hero-delay-4 mt-3 text-sm lg:text-base leading-relaxed text-[#aaa199] max-w-[480px]">Mitten in Urfahr – unkompliziert, warm und mit Blick für jedes Detail.</p>
+      <div class="hero-animate hero-delay-5 flex flex-wrap gap-4 mt-10">
+        <button type="button" (click)="scrollTo('menu')" class="btn-gold"><svg lucideUtensilsCrossed [size]="14" [strokeWidth]="2.5"></svg>Speisekarte ansehen</button>
+        <a href="tel:+43732000000" class="btn-outline"><svg lucidePhone [size]="14" [strokeWidth]="2.5"></svg>Anrufen</a>
+      </div>
+      <div class="hero-animate hero-delay-6 glass-gold mt-12 grid w-full max-w-2xl grid-cols-1 rounded-sm px-5 py-2 sm:grid-cols-3 sm:px-0 sm:py-5">
+        <div class="py-4 sm:px-6 sm:py-0"><div class="section-label mb-1.5">Öffnungszeiten</div><div class="text-sm text-[#eee7df]">Di – So · 11:00 – 22:00</div></div>
+        <div class="border-t border-[rgba(201,134,47,.2)] py-4 sm:border-l sm:border-t-0 sm:px-6 sm:py-0"><div class="section-label mb-1.5">Adresse</div><div class="text-sm text-[#eee7df]">Hauptstraße 42, 4040 Linz</div></div>
+        <div class="border-t border-[rgba(201,134,47,.2)] py-4 sm:border-l sm:border-t-0 sm:px-6 sm:py-0"><div class="section-label mb-1.5">Lieferservice</div><div class="text-sm text-[#eee7df]">Telefonisch anfragen</div></div>
+      </div>
+    </div>
+  </div>
+  <button type="button" (click)="scrollTo('ueber-uns')" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 animate-scroll-bounce" aria-label="Nach unten scrollen"><span class="text-[10px] font-semibold uppercase tracking-widest text-[#aaa199]">Entdecken</span><svg lucideChevronDown [size]="18" [strokeWidth]="1.5" class="text-[#d89a4b]"></svg></button>
+</section>
