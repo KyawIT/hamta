@@ -9,10 +9,11 @@ import { GalleryComponent } from '../../sections/gallery/gallery.component';
 import { HeroComponent } from '../../sections/hero/hero.component';
 import { LocationComponent } from '../../sections/location/location.component';
 import { MenuComponent } from '../../sections/menu/menu.component';
+import { DrinksComponent } from '../../sections/drinks/drinks.component';
 
 @Component({
   selector: 'app-home-page',
-  imports: [HeaderComponent, MobileNavComponent, FooterComponent, HeroComponent, AboutComponent, MenuComponent, GalleryComponent, LocationComponent, ContactComponent],
+  imports: [HeaderComponent, MobileNavComponent, FooterComponent, HeroComponent, AboutComponent, MenuComponent, DrinksComponent, GalleryComponent, LocationComponent, ContactComponent],
   templateUrl: './home.page.html',
   styleUrl: './home.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

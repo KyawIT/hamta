@@ -1,0 +1,142 @@
+.menu-board {
+  background: var(--board-bg, #0e0e0e);
+}
+
+.menu-board__veil {
+  background: linear-gradient(90deg, var(--board-bg, #0e0e0e) 0%, color-mix(in srgb, var(--board-bg, #0e0e0e) 82%, transparent) 48%, var(--board-bg, #0e0e0e) 100%);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-track > .menu-filter-pill {
+  scroll-snap-align: start;
+}
+
+/* Desktop: signal the row is draggable; kill snap/smooth while a drag is live. */
+.tab-track.is-grabbable {
+  cursor: grab;
+}
+
+.tab-track.is-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.tab-track.is-dragging .menu-filter-pill {
+  pointer-events: none;
+}
+
+/* Edge fades + clickable chevrons: rendered when >4 categories, each side fades
+   out when its end of the track is reached. */
+.tab-fade,
+.tab-hint {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+
+.tab-fade--start,
+.tab-hint--prev {
+  right: auto;
+  left: 0;
+}
+
+.tab-scroll.has-more .tab-fade:not(.tab-fade--start),
+.tab-scroll.has-more .tab-hint:not(.tab-hint--prev),
+.tab-scroll.has-prev .tab-fade--start,
+.tab-scroll.has-prev .tab-hint--prev {
+  opacity: 1;
+}
+
+.tab-scroll.has-more .tab-hint:not(.tab-hint--prev),
+.tab-scroll.has-prev .tab-hint--prev {
+  pointer-events: auto;
+}
+
+.tab-fade {
+  width: 3.5rem;
+  border-radius: 0 1rem 1rem 0;
+  background: linear-gradient(to right, transparent, var(--board-bg, #0e0e0e) 92%);
+}
+
+.tab-fade--start {
+  border-radius: 1rem 0 0 1rem;
+  background: linear-gradient(to left, transparent, var(--board-bg, #0e0e0e) 92%);
+}
+
+.tab-hint {
+  display: flex;
+  align-items: center;
+  padding: 0 .5rem;
+  border: none;
+  background: transparent;
+  color: #d89a4b;
+  cursor: pointer;
+  animation: tab-hint-nudge 1.4s ease-in-out infinite;
+}
+
+.tab-hint--prev {
+  animation-name: tab-hint-nudge-left;
+}
+
+.tab-hint:hover {
+  color: #f0b96a;
+  animation-play-state: paused;
+}
+
+@keyframes tab-hint-nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+
+@keyframes tab-hint-nudge-left {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-hint { animation: none; }
+  .no-scrollbar { scroll-behavior: auto; }
+}
+
+.menu-filter-pill {
+  color: #aaa199;
+}
+
+.menu-filter-pill:hover {
+  color: #eee7df;
+  background: rgba(201, 134, 47, .1);
+}
+
+.menu-filter-pill.is-active {
+  color: #fff8ee;
+  background: linear-gradient(135deg, #c9862f, #7a4a1e);
+  box-shadow: 0 6px 22px rgba(122, 74, 30, .3);
+}
+
+.menu-card {
+  border: 1px solid rgba(201, 134, 47, .1);
+  background: linear-gradient(145deg, rgba(35, 32, 29, .72), rgba(22, 22, 22, .86));
+  transition: border-color .3s ease, box-shadow .3s ease, transform .3s ease;
+}
+
+.menu-card:hover {
+  border-color: rgba(201, 134, 47, .36);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, .28), 0 0 28px rgba(201, 134, 47, .07);
+  transform: translateY(-3px);
+}

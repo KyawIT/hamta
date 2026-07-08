@@ -13,7 +13,8 @@ export class FooterComponent {
   readonly year = new Date().getFullYear();
   readonly navLinks = [
     { label: 'Start', href: '#start' }, { label: 'Über uns', href: '#ueber-uns' },
-    { label: 'Speisekarte', href: '#menu' }, { label: 'Galerie', href: '#galerie' },
+    { label: 'Speisekarte', href: '#menu' }, { label: 'Getränke', href: '#getraenke' },
+    { label: 'Galerie', href: '#galerie' },
     { label: 'Kontakt', href: '#kontakt' },
   ];
 }

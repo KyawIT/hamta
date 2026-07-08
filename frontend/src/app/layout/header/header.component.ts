@@ -24,6 +24,7 @@ export class HeaderComponent implements OnDestroy {
     { label: 'Start', href: '#start' },
     { label: 'Über uns', href: '#ueber-uns' },
     { label: 'Speisekarte', href: '#menu' },
+    { label: 'Getränke', href: '#getraenke' },
     { label: 'Kontakt', href: '#kontakt' },
   ];
 

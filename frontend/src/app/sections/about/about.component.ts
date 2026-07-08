@@ -12,8 +12,7 @@ import { SectionLabelComponent } from '../../shared/section-label/section-label.
 })
 export class AboutComponent {
   readonly stats = [
-    { value: '2024', label: 'Eröffnung' },
+    { value: '2026', label: 'Eröffnung' },
     { value: '30+', label: 'Italienische Klassiker' },
-    { value: '6 Tage', label: 'Für Sie geöffnet' },
   ];
 }
