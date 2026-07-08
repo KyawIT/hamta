@@ -9,11 +9,10 @@ import { GalleryComponent } from '../../sections/gallery/gallery.component';
 import { HeroComponent } from '../../sections/hero/hero.component';
 import { LocationComponent } from '../../sections/location/location.component';
 import { MenuComponent } from '../../sections/menu/menu.component';
-import { SocialComponent } from '../../sections/social/social.component';
 
 @Component({
   selector: 'app-home-page',
-  imports: [HeaderComponent, MobileNavComponent, FooterComponent, HeroComponent, AboutComponent, MenuComponent, GalleryComponent, SocialComponent, LocationComponent, ContactComponent],
+  imports: [HeaderComponent, MobileNavComponent, FooterComponent, HeroComponent, AboutComponent, MenuComponent, GalleryComponent, LocationComponent, ContactComponent],
   templateUrl: './home.page.html',
   styleUrl: './home.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,8 +20,8 @@ import { SocialComponent } from '../../sections/social/social.component';
 export class HomePage {
   constructor() {
     inject(SeoService).apply({
-      title: 'Hamta Restaurant – Persisches Kebap & Grill in Linz',
-      description: 'Persisches und afghanisches Restaurant in Linz-Urfahr. Täglich frisch zubereitete Kebap-Gerichte, Lammspezialitäten und orientalische Küche. Di–So 11–22 Uhr, Hauptstraße 42.',
+      title: 'Hamta Restaurant – Italienische Küche & Pizza in Linz',
+      description: 'Italienisches Restaurant und Pizzeria in Linz-Urfahr mit Antipasti, Pasta, Pizza und Dolci. Di–So 11–22 Uhr, Hauptstraße 42.',
       canonical: 'https://hamtarestaurant.at',
       openGraph: true,
       jsonLd: RESTAURANT_SCHEMA,

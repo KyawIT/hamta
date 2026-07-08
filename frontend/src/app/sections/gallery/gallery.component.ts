@@ -11,17 +11,13 @@ import { SectionLabelComponent } from '../../shared/section-label/section-label.
 })
 export class GalleryComponent {
   readonly images = [
-    { src: '/foods/food-2.jpg', alt: 'Gegrilltes Lammfleisch', span: 'row-span-2' },
-    { src: '/foods/food-3.jpg', alt: 'Persischer Kebap', span: '' },
-    { src: '/foods/food-4.jpg', alt: 'Frische Zutaten', span: '' },
-    { src: '/foods/food-6.jpg', alt: 'Mantu – Gefüllte Teigtaschen', span: '' },
-    { src: '/foods/food-7.jpg', alt: 'Gemischter Grillteller', span: 'row-span-2' },
-    { src: '/foods/food-9.jpg', alt: 'Joojeh Kebap', span: '' },
-    { src: '/foods/food-10.jpg', alt: 'Lammkotelett vom Grill', span: '' },
-    { src: '/foods/food-11.jpg', alt: 'Orientalische Spezialitäten', span: '' },
-    { src: '/foods/food-12.jpg', alt: 'Persischer Safranreis', span: '' },
-    { src: '/foods/food-13.jpg', alt: 'Chelo Kebap', span: 'row-span-2' },
-    { src: '/foods/food-14.jpg', alt: 'Fladenbrot', span: '' },
-    { src: '/foods/food-15.jpg', alt: 'Hamta Restaurant', span: '' },
+    { src: '/assets/Image3.jpeg', alt: 'Frisch gebackene Pizzen am Küchenpass', span: 'row-span-2' },
+    { src: '/foods/food-9.jpg', alt: 'Kreativ angerichtete Vorspeise', span: '' },
+    { src: '/assets/Image7.jpeg', alt: 'Fein angerichteter Teller mit frischen Beeren', span: '' },
+    { src: '/assets/Image5.jpeg', alt: 'Modern präsentierter Gang aus der Küche', span: '' },
+    { src: '/assets/Image17.jpeg', alt: 'Sorgfältig angerichteter Teller auf hellem Holz', span: 'row-span-2' },
+    { src: '/assets/Image10.jpeg', alt: 'Gedeckter Tisch mit einem frischen Gericht', span: '' },
+    { src: '/assets/Image22.jpeg', alt: 'Dessert mit Schokolade und Fruchtsauce', span: '' },
+    { src: '/assets/Image23.jpeg', alt: 'Dessert auf handglasierter Keramik', span: '' },
   ];
 }
