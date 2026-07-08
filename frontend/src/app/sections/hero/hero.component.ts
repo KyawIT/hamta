@@ -1,10 +1,11 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, PLATFORM_ID } from '@angular/core';
 import { LucideChevronDown, LucidePhone, LucideUtensilsCrossed } from '@lucide/angular';
+import { ParallaxDirective } from '../../shared/parallax.directive';
 
 @Component({
   selector: 'app-hero',
-  imports: [LucideChevronDown, LucidePhone, LucideUtensilsCrossed],
+  imports: [LucideChevronDown, LucidePhone, LucideUtensilsCrossed, ParallaxDirective],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

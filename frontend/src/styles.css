@@ -14,9 +14,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #f2ca50;
-  --color-primary-container: #d4af37;
-  --color-primary-dim: #c9a227;
+  --color-primary: #c9862f;
+  --color-primary-container: #a86627;
+  --color-primary-dim: #7a4a1e;
   --color-surface: #131313;
   --color-surface-low: #0e0e0e;
   --color-surface-high: #1e1e1e;
@@ -25,8 +25,8 @@
   --color-on-surface: #e5e2e1;
   --color-on-surface-dim: #c8c6c5;
   --color-secondary: #c8c6c5;
-  --color-outline: #99907c;
-  --color-outline-dim: #4a4640;
+  --color-outline: #aaa199;
+  --color-outline-dim: #756e68;
 
   --font-serif: "Noto Serif", Georgia, "Times New Roman", serif;
   --font-sans: "Manrope", system-ui, -apple-system, sans-serif;
@@ -71,11 +71,11 @@ a {
 }
 
 .gold-label-line {
-  background: linear-gradient(90deg, #f2ca50, transparent);
+  background: linear-gradient(90deg, #c9862f, transparent);
 }
 
 .text-gold-gradient {
-  background: linear-gradient(135deg, #f2ca50, #d4af37);
+  background: linear-gradient(135deg, #dfa254, #c9862f 48%, #7a4a1e);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -93,8 +93,8 @@ h4 {
 /* ─── Selection ─────────────────────────────────────────────────────────────── */
 
 ::selection {
-  background-color: #f2ca5033;
-  color: #f2ca50;
+  background-color: #c9862f40;
+  color: #f1c27d;
 }
 
 /* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
@@ -110,7 +110,7 @@ h4 {
   border-radius: 0;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #f2ca50;
+  background: #c9862f;
 }
 
 /* ─── Animations ────────────────────────────────────────────────────────────── */
@@ -218,22 +218,33 @@ h4 {
 /* ─── Glass ─────────────────────────────────────────────────────────────────── */
 
 .glass {
-  background: rgba(30, 30, 30, 0.6);
+  border: 1px solid rgba(201, 134, 47, 0.2);
+  background: rgba(19, 19, 19, 0.62);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22);
+}
+
+.glass-dark {
+  border: 1px solid rgba(201, 134, 47, 0.18);
+  background: rgba(14, 14, 14, 0.78);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
-.glass-dark {
-  background: rgba(14, 14, 14, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+.glass-gold {
+  border: 1px solid rgba(201, 134, 47, 0.34);
+  background: linear-gradient(135deg, rgba(36, 28, 20, 0.78), rgba(19, 19, 19, 0.58));
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.32), inset 0 1px rgba(255, 255, 255, 0.04);
 }
 
 /* ─── Gold gradient button ──────────────────────────────────────────────────── */
 
 .btn-gold {
-  background: linear-gradient(135deg, #f2ca50 0%, #d4af37 100%);
-  color: #131313;
+  background: linear-gradient(135deg, #c9862f 0%, #7a4a1e 100%);
+  color: #fff8ee;
   font-family: var(--font-sans);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -243,7 +254,8 @@ h4 {
   border-radius: 0.125rem;
   border: none;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 8px 30px rgba(122, 74, 30, 0.22);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -251,8 +263,8 @@ h4 {
 }
 
 .btn-gold:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+  box-shadow: 0 10px 36px rgba(201, 134, 47, 0.34);
+  transform: translateY(-2px);
 }
 
 .btn-outline {
@@ -275,8 +287,8 @@ h4 {
 }
 
 .btn-outline:hover {
-  border-color: #f2ca50;
-  color: #f2ca50;
+  border-color: #c9862f;
+  color: #dca158;
   transform: translateY(-1px);
 }
 
@@ -288,7 +300,7 @@ h4 {
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #f2ca50;
+  color: #d89a4b;
 }
 
 /* ─── Gold accent line ──────────────────────────────────────────────────────── */
@@ -296,7 +308,7 @@ h4 {
 .gold-line {
   width: 3rem;
   height: 1px;
-  background: linear-gradient(90deg, #f2ca50, transparent);
+  background: linear-gradient(90deg, #c9862f, transparent);
 }
 
 /* ─── Menu item separator (tonal shift) ──────────────────────────────────────── */
@@ -335,7 +347,7 @@ h4 {
 
 .footer-heading {
   margin-bottom: 1.25rem;
-  color: #f2ca50;
+  color: #d89a4b;
   font-family: var(--font-sans);
   font-size: .75rem;
   font-weight: 600;
@@ -353,14 +365,22 @@ h4 {
 }
 
 .social-link:hover {
-  color: #f2ca50;
+  color: #d89a4b;
 }
 
 .contact-info-card {
   height: 100%;
   padding: 1.75rem;
   border-radius: .125rem;
-  background: #1e1e1e;
+  border: 1px solid rgba(201, 134, 47, .12);
+  background: linear-gradient(145deg, rgba(35, 32, 29, .9), rgba(25, 25, 25, .96));
+  transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+
+.contact-info-card:hover {
+  border-color: rgba(201, 134, 47, .34);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, .24);
+  transform: translateY(-3px);
 }
 
 .contact-info-card .info-heading {
@@ -368,7 +388,7 @@ h4 {
   align-items: center;
   gap: .5rem;
   margin-bottom: 1.25rem;
-  color: #f2ca50;
+  color: #d89a4b;
 }
 
 .contact-info-card h3 {
@@ -380,7 +400,7 @@ h4 {
 }
 
 .contact-info-card p {
-  color: #4a4640;
+  color: #aaa199;
   font-size: .875rem;
   line-height: 1.75rem;
 }
@@ -388,7 +408,7 @@ h4 {
 .contact-info-card > a {
   display: inline-flex;
   margin-top: 1.25rem;
-  color: #f2ca50;
+  color: #d89a4b;
   font-size: .75rem;
   font-weight: 600;
   letter-spacing: .08em;
@@ -398,7 +418,7 @@ h4 {
 .form-label {
   display: block;
   margin-bottom: .5rem;
-  color: #4a4640;
+  color: #aaa199;
   font-size: .75rem;
   font-weight: 600;
   letter-spacing: .1em;
@@ -418,7 +438,7 @@ h4 {
 }
 
 .form-control:focus {
-  border-color: rgba(242,202,80,.4);
+  border-color: rgba(201,134,47,.55);
 }
 
 .form-control::placeholder {
@@ -428,6 +448,7 @@ h4 {
 .side-card {
   padding: 2rem;
   border-radius: .125rem;
+  border: 1px solid rgba(201, 134, 47, .12);
   background: #1e1e1e;
 }
 
@@ -440,7 +461,7 @@ h4 {
 }
 
 .side-card p {
-  color: #4a4640;
+  color: #aaa199;
   font-size: .875rem;
   line-height: 1.5rem;
 }
@@ -454,7 +475,7 @@ h4 {
 
 .legal-label {
   margin-bottom: 1rem;
-  color: #f2ca50;
+  color: #d89a4b;
   font-size: .75rem;
   font-weight: 600;
   letter-spacing: .14em;
@@ -473,7 +494,7 @@ h4 {
 .legal-heading {
   margin-bottom: 1rem;
   padding-bottom: .75rem;
-  border-bottom: 1px solid rgba(242,202,80,.12);
+  border-bottom: 1px solid rgba(201,134,47,.16);
   color: #e5e2e1;
   font-family: var(--font-serif);
   font-size: 1.125rem;
@@ -487,7 +508,7 @@ h4 {
 }
 
 .legal-copy a {
-  color: #f2ca50;
+  color: #d89a4b;
 }
 
 .legal-copy strong {
@@ -518,7 +539,7 @@ h4 {
 .privacy-content h3 {
   margin-top: 1.5rem;
   margin-bottom: .5rem;
-  color: #f2ca50;
+  color: #d89a4b;
   font-family: var(--font-sans);
   font-size: .875rem;
   font-weight: 600;
@@ -536,7 +557,7 @@ h4 {
 
 .privacy-content .rights > div {
   padding-left: 1rem;
-  border-left: 2px solid rgba(242,202,80,.25);
+  border-left: 2px solid rgba(201,134,47,.3);
 }
 
 .privacy-content .rights p {

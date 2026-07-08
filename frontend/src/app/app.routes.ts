@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    title: 'Hamta Restaurant – Persisches Kebap & Grill in Linz',
+    title: 'Hamta Restaurant – Italienische Küche & Pizza in Linz',
     loadComponent: () => import('./pages/home/home.page').then((m) => m.HomePage),
   },
   {

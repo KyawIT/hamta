@@ -1,1 +1,11 @@
+.gallery-card {
+  border: 1px solid rgba(201, 134, 47, .12);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, .16);
+  transition: border-color .3s ease, box-shadow .3s ease, transform .3s ease;
+}
 
+.gallery-card:hover {
+  border-color: rgba(201, 134, 47, .42);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, .32), 0 0 30px rgba(201, 134, 47, .08);
+  transform: translateY(-3px);
+}

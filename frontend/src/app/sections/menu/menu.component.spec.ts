@@ -5,14 +5,14 @@ describe('MenuComponent', () => {
   it('switches menu categories', async () => {
     const fixture = TestBed.createComponent(MenuComponent);
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('Lammkebap (Dürum)');
+    expect(fixture.nativeElement.textContent).toContain('Bruschetta al Pomodoro');
 
     const buttons = Array.from(fixture.nativeElement.querySelectorAll('button')) as HTMLButtonElement[];
-    buttons.find((button) => button.textContent?.includes('Grill & Fleisch'))?.click();
+    buttons.find((button) => button.textContent?.includes('Pasta'))?.click();
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.activeTab()).toBe('grill');
-    expect(fixture.nativeElement.textContent).toContain('Lammkotelett');
-    expect(fixture.nativeElement.textContent).not.toContain('Lammkebap (Dürum)');
+    expect(fixture.componentInstance.activeTab()).toBe('pasta');
+    expect(fixture.nativeElement.textContent).toContain('Tagliatelle al Ragù');
+    expect(fixture.nativeElement.textContent).not.toContain('Bruschetta al Pomodoro');
   });
 });

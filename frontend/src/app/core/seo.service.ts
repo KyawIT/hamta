@@ -30,14 +30,14 @@ export class SeoService {
       this.set('property', 'og:site_name', 'Hamta Restaurant');
       this.set('property', 'og:title', config.title);
       this.set('property', 'og:description', config.description);
-      this.set('property', 'og:image', 'https://hamtarestaurant.at/foods/food-3.jpg');
-      this.set('property', 'og:image:width', '1200');
-      this.set('property', 'og:image:height', '630');
-      this.set('property', 'og:image:alt', 'Hamta Restaurant – Persische Küche in Linz');
+      this.set('property', 'og:image', 'https://hamtarestaurant.at/assets/Image3.jpeg');
+      this.set('property', 'og:image:width', '1080');
+      this.set('property', 'og:image:height', '607');
+      this.set('property', 'og:image:alt', 'Frisch gebackene Pizzen im Hamta Restaurant in Linz');
       this.set('name', 'twitter:card', 'summary_large_image');
       this.set('name', 'twitter:title', config.title);
       this.set('name', 'twitter:description', config.description);
-      this.set('name', 'twitter:image', 'https://hamtarestaurant.at/foods/food-3.jpg');
+      this.set('name', 'twitter:image', 'https://hamtarestaurant.at/assets/Image3.jpeg');
     } else {
       this.removeSocialMetadata();
     }
@@ -85,10 +85,10 @@ export const RESTAURANT_SCHEMA: Record<string, unknown> = {
   name: 'Hamta Restaurant',
   alternateName: 'Hamta',
   description:
-    'Persisches und afghanisches Restaurant in Linz-Urfahr. Täglich frisch zubereitete Kebap-Gerichte, Grill-Spezialitäten und traditionelle Lammgerichte.',
+    'Italienisches Restaurant und Pizzeria in Linz-Urfahr mit Antipasti, Pasta, Pizza und Dolci.',
   url: 'https://hamtarestaurant.at',
   logo: 'https://hamtarestaurant.at/logo.png',
-  image: 'https://hamtarestaurant.at/logo.png',
+  image: 'https://hamtarestaurant.at/assets/Image3.jpeg',
   telephone: '+43 732 000000',
   address: {
     '@type': 'PostalAddress',
@@ -107,7 +107,7 @@ export const RESTAURANT_SCHEMA: Record<string, unknown> = {
       closes: '22:00',
     },
   ],
-  servesCuisine: ['Persisch', 'Afghanisch', 'Orientalisch', 'Kebap', 'Grill'],
+  servesCuisine: ['Italienisch', 'Pizza', 'Pasta', 'Mediterran'],
   priceRange: '€€',
   currenciesAccepted: 'EUR',
   paymentAccepted: 'Cash, Credit Card',
