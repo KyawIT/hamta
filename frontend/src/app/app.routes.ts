@@ -16,5 +16,9 @@ export const routes: Routes = [
     title: 'Datenschutzerklärung | Hamta Restaurant Linz',
     loadComponent: () => import('./pages/datenschutz/datenschutz.page').then((m) => m.DatenschutzPage),
   },
+  {
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.routes').then((m) => m.adminRoutes),
+  },
   { path: '**', redirectTo: '' },
 ];

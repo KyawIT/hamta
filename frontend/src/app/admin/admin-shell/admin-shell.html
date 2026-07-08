@@ -1,0 +1,72 @@
+<div class="admin">
+  <!-- Sidebar overlay (mobile) -->
+  @if (sidebarOpen()) {
+    <div class="admin__scrim" (click)="closeSidebar()"></div>
+  }
+
+  <!-- Sidebar -->
+  <aside class="admin__sidebar" [class.admin__sidebar--open]="sidebarOpen()">
+    <div class="admin__brand">
+      <span class="admin__brand-name">HAMTA</span>
+      <span class="admin__brand-tag">Admin</span>
+    </div>
+
+    <nav class="admin__nav">
+      <a
+        class="admin__link"
+        routerLink="/admin/dashboard"
+        routerLinkActive="admin__link--active"
+        (click)="closeSidebar()"
+      >
+        <svg lucideLayoutDashboard [size]="18"></svg>
+        Dashboard
+      </a>
+      <a
+        class="admin__link"
+        routerLink="/admin/menu"
+        routerLinkActive="admin__link--active"
+        (click)="closeSidebar()"
+      >
+        <svg lucideUtensilsCrossed [size]="18"></svg>
+        Speisekarte
+      </a>
+      <a
+        class="admin__link"
+        routerLink="/admin/reservations"
+        routerLinkActive="admin__link--active"
+        (click)="closeSidebar()"
+      >
+        <svg lucideCalendarCheck [size]="18"></svg>
+        Reservierungen
+      </a>
+      <a
+        class="admin__link"
+        routerLink="/admin/settings"
+        routerLinkActive="admin__link--active"
+        (click)="closeSidebar()"
+      >
+        <svg lucideSettings [size]="18"></svg>
+        Einstellungen
+      </a>
+    </nav>
+
+    <a class="admin__back" href="/" target="_blank" rel="noopener">← Zur Website</a>
+  </aside>
+
+  <!-- Main -->
+  <div class="admin__main">
+    <header class="admin__topbar">
+      <button class="admin__burger" type="button" (click)="toggleSidebar()" aria-label="Menü">
+        <svg lucidePanelLeft [size]="20"></svg>
+      </button>
+      <button class="admin__logout" type="button" (click)="logout()">
+        <svg lucideLogOut [size]="16"></svg>
+        <span>Abmelden</span>
+      </button>
+    </header>
+
+    <main class="admin__content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

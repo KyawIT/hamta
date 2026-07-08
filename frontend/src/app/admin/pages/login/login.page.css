@@ -1,0 +1,133 @@
+:host {
+  display: block;
+}
+
+.login {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1.5rem;
+  background: var(--color-surface-low);
+  overflow: hidden;
+}
+
+/* Dezenter Gold-Schimmer hinter der Karte */
+.login__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 42rem;
+  height: 42rem;
+  transform: translate(-50%, -55%);
+  background: radial-gradient(
+    circle,
+    rgba(201, 134, 47, 0.14) 0%,
+    rgba(201, 134, 47, 0.04) 35%,
+    transparent 68%
+  );
+  pointer-events: none;
+}
+
+.login__card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 22rem;
+  padding: 2.75rem 2.25rem 2.25rem;
+  border: 1px solid rgba(201, 134, 47, 0.2);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(160deg, rgba(30, 30, 30, 0.92), rgba(14, 14, 14, 0.96));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+
+.login__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  text-align: center;
+}
+
+.login__logo {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.login__tag {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-outline-dim);
+}
+
+.login__lock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.5rem 0 1.75rem;
+  padding: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--color-outline-dim);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+}
+
+.login__error {
+  margin-top: -0.25rem;
+  color: #e0796b;
+  font-size: 0.8125rem;
+}
+
+.login__submit {
+  justify-content: center;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.login__submit:disabled {
+  opacity: 0.75;
+  cursor: default;
+  transform: none;
+}
+
+.login__spin {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.login__back {
+  display: block;
+  margin-top: 1.75rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-outline-dim);
+  transition: color 0.15s ease;
+}
+
+.login__back:hover {
+  color: var(--color-primary);
+}
