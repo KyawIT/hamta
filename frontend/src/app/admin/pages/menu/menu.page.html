@@ -1,0 +1,284 @@
+<!-- ─── Kopf ───────────────────────────────────────────────── -->
+<header class="head">
+  <div class="head__titles">
+    <p class="section-label mb-2">Verwaltung</p>
+    <h1 class="head__h1 font-serif">Speisekarte</h1>
+    <p class="head__sub">{{ totalCount() }} Gerichte insgesamt</p>
+  </div>
+  <button type="button" class="btn-gold head__add" (click)="openNew()">
+    <svg lucidePlus [size]="16"></svg>
+    Neues Gericht
+  </button>
+</header>
+
+<!-- ─── Werkzeugleiste ─────────────────────────────────────── -->
+<div class="toolbar">
+  <div class="segmented" role="tablist">
+    @for (g of groups; track g.id) {
+      <button
+        type="button"
+        class="segmented__item"
+        [class.segmented__item--active]="g.id === group()"
+        (click)="selectGroup(g.id)"
+      >
+        {{ g.label }}
+      </button>
+    }
+  </div>
+
+  <div class="searchbox">
+    <svg lucideSearch [size]="16" class="searchbox__icon"></svg>
+    <input
+      type="text"
+      class="searchbox__input"
+      placeholder="Gericht suchen…"
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+    />
+    @if (isSearching()) {
+      <button type="button" class="searchbox__clear" (click)="clearSearch()" aria-label="Suche löschen">
+        <svg lucideX [size]="15"></svg>
+      </button>
+    }
+  </div>
+</div>
+
+<!-- ─── Kategorie-Pills (nur ohne Suche) ───────────────────── -->
+@if (!isSearching()) {
+  <div class="pills">
+    @for (cat of groupCategories(); track cat.id) {
+      <button
+        type="button"
+        class="pill"
+        [class.pill--active]="cat.id === activeId()"
+        (click)="select(cat.id)"
+      >
+        {{ cat.label }}
+        <span class="pill__count">{{ countOf(cat.id) }}</span>
+      </button>
+    }
+  </div>
+} @else {
+  <p class="results-note">
+    {{ results().length }} Treffer für „{{ search().trim() }}"
+  </p>
+}
+
+<!-- ─── Gericht-Karten ─────────────────────────────────────── -->
+@if (results().length === 0) {
+  <div class="empty">
+    <svg lucideImageOff [size]="30"></svg>
+    @if (isSearching()) {
+      <p>Kein Gericht gefunden.</p>
+    } @else {
+      <p>Noch keine Gerichte in „{{ activeCategory().label }}".</p>
+      <button type="button" class="btn-gold empty__cta" (click)="openNew()">
+        <svg lucidePlus [size]="15"></svg> Erstes Gericht anlegen
+      </button>
+    }
+  </div>
+} @else {
+  <div class="grid">
+    @for (dish of results(); track dish.id) {
+      <article class="card">
+        <div class="card__media">
+          @if (dish.imageUrl) {
+            <img [src]="dish.imageUrl" [alt]="dish.name" />
+          } @else {
+            <div class="card__media-empty"><svg lucideImageOff [size]="22"></svg></div>
+          }
+          @if (dish.preis !== null) {
+            <span class="card__price">{{ formatPrice(dish.preis) }}</span>
+          }
+        </div>
+
+        <div class="card__body">
+          <span class="card__cat">{{ categoryLabel(dish.category) }}</span>
+          <h3 class="card__name font-serif">{{ dish.name }}</h3>
+          @if (dish.zutaten) {
+            <p class="card__desc">{{ dish.zutaten }}</p>
+          }
+        </div>
+
+        <div class="card__actions">
+          <button type="button" class="card__act" (click)="openEdit(dish)">
+            <svg lucidePencil [size]="15"></svg> Bearbeiten
+          </button>
+          <button type="button" class="card__act card__act--danger" (click)="askDelete(dish)">
+            <svg lucideTrash2 [size]="15"></svg> Löschen
+          </button>
+        </div>
+      </article>
+    }
+  </div>
+}
+
+<!-- ─── Floating-Button (Handy) ────────────────────────────── -->
+<button type="button" class="fab" (click)="openNew()" aria-label="Neues Gericht">
+  <svg lucidePlus [size]="24"></svg>
+</button>
+
+<!-- ─── Formular-Modal ─────────────────────────────────────── -->
+@if (editing() !== null) {
+  <div class="modal">
+    <div class="modal__scrim" (click)="closeForm()"></div>
+    <div class="modal__card" role="dialog" aria-modal="true">
+      <div class="modal__grip"></div>
+
+      <div class="modal__head">
+        <h2 class="modal__title font-serif">
+          {{ isEditing() ? 'Gericht bearbeiten' : 'Neues Gericht' }}
+        </h2>
+        <button type="button" class="modal__close" (click)="closeForm()" aria-label="Schließen">
+          <svg lucideX [size]="18"></svg>
+        </button>
+      </div>
+
+      <div class="modal__scroll">
+        <!-- Live-Vorschau -->
+        <div class="preview">
+          <span class="preview__label">Vorschau</span>
+          <article class="card card--preview">
+            <div class="card__media">
+              @if (preview().imageUrl) {
+                <img [src]="preview().imageUrl" alt="Vorschau" />
+              } @else {
+                <div class="card__media-empty"><svg lucideImageOff [size]="22"></svg></div>
+              }
+              @if (preview().preis !== null) {
+                <span class="card__price">{{ formatPrice(preview().preis) }}</span>
+              }
+            </div>
+            <div class="card__body">
+              <span class="card__cat">{{ categoryLabel(preview().category) }}</span>
+              <h3 class="card__name font-serif">{{ preview().name }}</h3>
+              @if (preview().zutaten) {
+                <p class="card__desc">{{ preview().zutaten }}</p>
+              }
+            </div>
+          </article>
+        </div>
+
+        <form class="form" (ngSubmit)="save()">
+          <div class="field">
+            <label class="form-label" for="f-category">Kategorie</label>
+            <div class="select-wrap">
+              <select
+                id="f-category"
+                class="form-control"
+                [ngModel]="formCategoryId()"
+                (ngModelChange)="formCategoryId.set($event)"
+                name="category"
+              >
+                @for (g of groups; track g.id) {
+                  <optgroup [label]="g.label">
+                    @for (cat of categoriesOf(g.id); track cat.id) {
+                      <option [value]="cat.id">{{ cat.label }}</option>
+                    }
+                  </optgroup>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="form-label" for="f-name">Name</label>
+            <input
+              id="f-name"
+              class="form-control"
+              type="text"
+              [ngModel]="formName()"
+              (ngModelChange)="formName.set($event)"
+              name="name"
+              placeholder="z.B. Cremige Burrata"
+            />
+          </div>
+
+          <div class="field">
+            <label class="form-label" for="f-zutaten">Zutaten / Beschreibung</label>
+            <textarea
+              id="f-zutaten"
+              class="form-control"
+              rows="3"
+              [ngModel]="formZutaten()"
+              (ngModelChange)="formZutaten.set($event)"
+              name="zutaten"
+              placeholder="Kurze Beschreibung der Zutaten"
+            ></textarea>
+          </div>
+
+          <div class="field">
+            <label class="form-label" for="f-preis">Preis (€)</label>
+            <input
+              id="f-preis"
+              class="form-control"
+              type="text"
+              inputmode="decimal"
+              [ngModel]="formPreis()"
+              (ngModelChange)="formPreis.set($event)"
+              name="preis"
+              placeholder="12,90"
+            />
+          </div>
+
+          <div class="field">
+            <label class="form-label">Foto (optional)</label>
+            <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
+
+            @if (formImageUrl()) {
+              <div class="upload upload--preview">
+                <img [src]="formImageUrl()" alt="Vorschau" />
+                <div class="upload__overlay">
+                  <button type="button" class="upload__act" (click)="fileInput.click()">
+                    <svg lucideImageUp [size]="15"></svg> Ändern
+                  </button>
+                  <button type="button" class="upload__act upload__act--danger" (click)="removeImage()">
+                    <svg lucideTrash2 [size]="15"></svg> Entfernen
+                  </button>
+                </div>
+              </div>
+            } @else {
+              <button type="button" class="upload upload--empty" (click)="fileInput.click()">
+                @if (imageLoading()) {
+                  <svg lucideLoaderCircle [size]="22" class="upload__spin"></svg>
+                  <span class="upload__title">Wird geladen…</span>
+                } @else {
+                  <svg lucideImageUp [size]="24"></svg>
+                  <span class="upload__title">Foto auswählen</span>
+                  <span class="upload__hint">Direkt vom Gerät · JPG oder PNG</span>
+                }
+              </button>
+            }
+          </div>
+
+          @if (formError()) {
+            <p class="form__error">{{ formError() }}</p>
+          }
+        </form>
+      </div>
+
+      <div class="modal__foot">
+        <button type="button" class="btn-outline" (click)="closeForm()">Abbrechen</button>
+        <button type="button" class="btn-gold" (click)="save()">Speichern</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ─── Lösch-Bestätigung ──────────────────────────────────── -->
+@if (deleting(); as dish) {
+  <div class="modal">
+    <div class="modal__scrim" (click)="cancelDelete()"></div>
+    <div class="modal__card modal__card--sm" role="dialog" aria-modal="true">
+      <div class="modal__grip"></div>
+      <h2 class="modal__title font-serif">Gericht löschen?</h2>
+      <p class="modal__text">
+        „{{ dish.name }}" wird dauerhaft entfernt. Das kann nicht rückgängig gemacht werden.
+      </p>
+      <div class="modal__foot modal__foot--flush">
+        <button type="button" class="btn-outline" (click)="cancelDelete()">Abbrechen</button>
+        <button type="button" class="btn-danger" (click)="confirmDelete()">Löschen</button>
+      </div>
+    </div>
+  </div>
+}
