@@ -30,7 +30,8 @@ Diese Punkte sollten **im Team** geklärt werden, bevor weitergebaut wird:
 - [x] **Dashboard** – Übersicht mit echten Zahlen + Schnell-Links
 - [x] **Speisekarte-Verwaltung** (`/admin/menu`) – UI fertig (In-Memory, mobile-first)
 - [x] **Galerie-Verwaltung** (`/admin/gallery`) – UI fertig, Upload max. 10 Bilder (In-Memory)
-- [ ] `/admin/menu` + `/admin/gallery` an die echte API + Bild-Upload anbinden
+- [x] **`/admin/menu` an die echte API + Bild-Upload (MinIO) angebunden** (`feature/admin-menu-api`)
+- [ ] `/admin/gallery` an die API anbinden – *braucht erst einen Galerie-Endpoint im Backend*
 - [ ] **Reservierungen** (`/admin/reservations`) – *braucht neues Backend*
 - [ ] Echter Login über Keycloak (ersetzt Platzhalter)
 

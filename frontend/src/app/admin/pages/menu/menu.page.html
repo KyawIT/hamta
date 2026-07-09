@@ -11,6 +11,10 @@
   </button>
 </header>
 
+@if (loadError()) {
+  <p class="load-error" role="alert">{{ loadError() }}</p>
+}
+
 <!-- ─── Werkzeugleiste ─────────────────────────────────────── -->
 <div class="toolbar">
   <div class="segmented" role="tablist">
@@ -79,7 +83,7 @@
   </div>
 } @else {
   <div class="grid">
-    @for (dish of results(); track dish.id) {
+    @for (dish of results(); track dish.category + '-' + dish.id) {
       <article class="card">
         <div class="card__media">
           @if (dish.imageUrl) {
@@ -258,8 +262,12 @@
       </div>
 
       <div class="modal__foot">
-        <button type="button" class="btn-outline" (click)="closeForm()">Abbrechen</button>
-        <button type="button" class="btn-gold" (click)="save()">Speichern</button>
+        <button type="button" class="btn-outline" (click)="closeForm()" [disabled]="saving()">
+          Abbrechen
+        </button>
+        <button type="button" class="btn-gold" (click)="save()" [disabled]="saving()">
+          {{ saving() ? 'Speichert…' : 'Speichern' }}
+        </button>
       </div>
     </div>
   </div>
