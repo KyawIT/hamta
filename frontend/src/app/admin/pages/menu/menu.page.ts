@@ -1,21 +1,36 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+
+import { MenuAdminService } from '../../menu/menu-admin.service';
+import { CATEGORIES, CategoryId } from '../../menu/menu.model';
 
 @Component({
   selector: 'app-admin-menu',
-  template: `
-    <header class="mb-8">
-      <p class="section-label mb-2">Verwaltung</p>
-      <h1 class="font-serif text-2xl font-semibold text-on-surface">Speisekarte</h1>
-    </header>
-
-    <div
-      class="rounded-sm border border-dashed border-white/10 bg-surface-high p-10 text-center"
-    >
-      <p class="text-sm text-outline-dim">
-        Hier verwaltest du bald Vor-, Haupt- und Nachspeisen. Anbindung an die API folgt.
-      </p>
-    </div>
-  `,
+  templateUrl: './menu.page.html',
+  styleUrl: './menu.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MenuPage {}
+export class MenuPage {
+  private readonly menu = inject(MenuAdminService);
+
+  readonly categories = CATEGORIES;
+  readonly activeId = signal<CategoryId>('starter');
+
+  readonly activeCategory = computed(
+    () => this.categories.find((c) => c.id === this.activeId()) ?? this.categories[0],
+  );
+  readonly dishes = computed(() =>
+    this.menu.dishes().filter((d) => d.category === this.activeId()),
+  );
+
+  select(id: CategoryId): void {
+    this.activeId.set(id);
+  }
+
+  countOf(id: CategoryId): number {
+    return this.menu.dishes().filter((d) => d.category === id).length;
+  }
+
+  formatPrice(preis: number | null): string {
+    return preis == null ? '—' : `€ ${preis.toFixed(2).replace('.', ',')}`;
+  }
+}

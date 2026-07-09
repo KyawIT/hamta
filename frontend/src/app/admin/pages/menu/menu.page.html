@@ -1,0 +1,50 @@
+<header class="mb-6">
+  <p class="section-label mb-2">Verwaltung</p>
+  <h1 class="font-serif text-2xl font-semibold text-on-surface">Speisekarte</h1>
+</header>
+
+<!-- Kategorie-Umschaltung -->
+<div class="menu-tabs" role="tablist">
+  @for (cat of categories; track cat.id) {
+    <button
+      type="button"
+      class="menu-tab"
+      [class.menu-tab--active]="cat.id === activeId()"
+      (click)="select(cat.id)"
+    >
+      {{ cat.label }}
+      <span class="menu-tab__count">{{ countOf(cat.id) }}</span>
+    </button>
+  }
+</div>
+
+<!-- Liste -->
+@if (dishes().length === 0) {
+  <div class="menu-empty">
+    Noch keine Gerichte in „{{ activeCategory().label }}".
+  </div>
+} @else {
+  <ul class="menu-list">
+    @for (dish of dishes(); track dish.id) {
+      <li class="dish">
+        <div class="dish__thumb">
+          @if (dish.imageUrl) {
+            <img [src]="dish.imageUrl" [alt]="dish.name" />
+          } @else {
+            <span class="dish__thumb-empty">Kein Bild</span>
+          }
+        </div>
+
+        <div class="dish__body">
+          <div class="dish__head">
+            <h3 class="dish__name">{{ dish.name }}</h3>
+            <span class="dish__price">{{ formatPrice(dish.preis) }}</span>
+          </div>
+          @if (dish.zutaten) {
+            <p class="dish__zutaten">{{ dish.zutaten }}</p>
+          }
+        </div>
+      </li>
+    }
+  </ul>
+}
