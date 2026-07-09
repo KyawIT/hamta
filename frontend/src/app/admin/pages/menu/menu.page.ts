@@ -1,13 +1,31 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LucidePencil, LucidePlus, LucideTrash2, LucideX } from '@lucide/angular';
+import {
+  LucideImageUp,
+  LucideLoaderCircle,
+  LucidePencil,
+  LucidePlus,
+  LucideTrash2,
+  LucideX,
+} from '@lucide/angular';
 
 import { MenuAdminService } from '../../menu/menu-admin.service';
 import { CATEGORIES, CategoryId, Dish } from '../../menu/menu.model';
 
+/** Maximale Kantenlänge, auf die hochgeladene Fotos verkleinert werden. */
+const MAX_IMAGE_SIZE = 900;
+
 @Component({
   selector: 'app-admin-menu',
-  imports: [FormsModule, LucidePencil, LucidePlus, LucideTrash2, LucideX],
+  imports: [
+    FormsModule,
+    LucideImageUp,
+    LucideLoaderCircle,
+    LucidePencil,
+    LucidePlus,
+    LucideTrash2,
+    LucideX,
+  ],
   templateUrl: './menu.page.html',
   styleUrl: './menu.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,6 +51,7 @@ export class MenuPage {
   readonly formPreis = signal('');
   readonly formImageUrl = signal('');
   readonly formError = signal('');
+  readonly imageLoading = signal(false);
 
   readonly formCategory = computed(() => this.activeCategory());
   readonly isEditing = computed(() => typeof this.editing() === 'number');
@@ -64,6 +83,7 @@ export class MenuPage {
     this.formPreis.set(dish.preis == null ? '' : String(dish.preis).replace('.', ','));
     this.formImageUrl.set(dish.imageUrl ?? '');
     this.formError.set('');
+    this.imageLoading.set(false);
     this.editing.set(dish.id);
   }
 
@@ -89,7 +109,7 @@ export class MenuPage {
       name,
       zutaten: this.formCategory().hasZutaten ? this.formZutaten().trim() : '',
       preis,
-      imageUrl: this.formImageUrl().trim() || undefined,
+      imageUrl: this.formImageUrl() || undefined,
     };
 
     const current = this.editing();
@@ -99,6 +119,59 @@ export class MenuPage {
       this.menu.add(input);
     }
     this.closeForm();
+  }
+
+  // ─── Foto-Upload ───────────────────────────────────────────
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = ''; // erlaubt erneutes Auswählen derselben Datei
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      this.formError.set('Bitte eine Bilddatei auswählen.');
+      return;
+    }
+
+    this.formError.set('');
+    this.imageLoading.set(true);
+    this.downscale(file)
+      .then((url) => {
+        this.formImageUrl.set(url);
+        this.imageLoading.set(false);
+      })
+      .catch(() => {
+        this.formError.set('Foto konnte nicht geladen werden.');
+        this.imageLoading.set(false);
+      });
+  }
+
+  removeImage(): void {
+    this.formImageUrl.set('');
+  }
+
+  /** Liest das Foto, verkleinert es auf MAX_IMAGE_SIZE und gibt eine Data-URL zurück. */
+  private downscale(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject();
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject();
+        img.onload = () => {
+          const scale = Math.min(1, MAX_IMAGE_SIZE / Math.max(img.width, img.height));
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return reject();
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', 0.82));
+        };
+        img.src = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
   // ─── Löschen ───────────────────────────────────────────────
@@ -122,6 +195,7 @@ export class MenuPage {
     this.formPreis.set('');
     this.formImageUrl.set('');
     this.formError.set('');
+    this.imageLoading.set(false);
   }
 
   private parsePreis(raw: string): number | null | 'invalid' {

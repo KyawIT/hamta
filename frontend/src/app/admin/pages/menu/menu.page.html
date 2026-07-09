@@ -108,32 +108,54 @@
           </div>
         }
 
-        <div class="modal__row">
-          <div>
-            <label class="form-label" for="f-preis">Preis (€)</label>
-            <input
-              id="f-preis"
-              class="form-control"
-              type="text"
-              inputmode="decimal"
-              [ngModel]="formPreis()"
-              (ngModelChange)="formPreis.set($event)"
-              name="preis"
-              placeholder="12,90"
-            />
-          </div>
-          <div>
-            <label class="form-label" for="f-image">Bild-URL (optional)</label>
-            <input
-              id="f-image"
-              class="form-control"
-              type="text"
-              [ngModel]="formImageUrl()"
-              (ngModelChange)="formImageUrl.set($event)"
-              name="imageUrl"
-              placeholder="https://…"
-            />
-          </div>
+        <div>
+          <label class="form-label" for="f-preis">Preis (€)</label>
+          <input
+            id="f-preis"
+            class="form-control"
+            type="text"
+            inputmode="decimal"
+            [ngModel]="formPreis()"
+            (ngModelChange)="formPreis.set($event)"
+            name="preis"
+            placeholder="12,90"
+          />
+        </div>
+
+        <div>
+          <label class="form-label">Foto (optional)</label>
+          <input
+            #fileInput
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onFileSelected($event)"
+          />
+
+          @if (formImageUrl()) {
+            <div class="upload upload--preview">
+              <img [src]="formImageUrl()" alt="Vorschau" />
+              <div class="upload__overlay">
+                <button type="button" class="upload__act" (click)="fileInput.click()">
+                  <svg lucideImageUp [size]="15"></svg> Ändern
+                </button>
+                <button type="button" class="upload__act upload__act--danger" (click)="removeImage()">
+                  <svg lucideTrash2 [size]="15"></svg> Entfernen
+                </button>
+              </div>
+            </div>
+          } @else {
+            <button type="button" class="upload upload--empty" (click)="fileInput.click()">
+              @if (imageLoading()) {
+                <svg lucideLoaderCircle [size]="22" class="upload__spin"></svg>
+                <span class="upload__title">Wird geladen…</span>
+              } @else {
+                <svg lucideImageUp [size]="24"></svg>
+                <span class="upload__title">Foto auswählen</span>
+                <span class="upload__hint">Direkt vom Gerät · JPG oder PNG</span>
+              }
+            </button>
+          }
         </div>
 
         @if (formError()) {
