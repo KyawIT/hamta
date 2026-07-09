@@ -1,0 +1,92 @@
+.team-portrait {
+  position: relative;
+  width: 11rem;
+  height: 12.5rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.team-portrait-lg {
+  width: 14rem;
+  height: 16rem;
+}
+
+/* Round backdrop the person stands in front of */
+.team-circle {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 11rem;
+  height: 11rem;
+  border-radius: 9999px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  border: 1px solid rgba(201, 134, 47, .22);
+  background:
+    radial-gradient(circle at 50% 20%, rgba(201, 134, 47, .28) 0%, transparent 62%),
+    linear-gradient(145deg, rgba(35, 32, 29, .95), rgba(22, 21, 20, .98));
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .04);
+  transition: border-color .35s ease, box-shadow .35s ease;
+}
+
+.team-portrait-lg .team-circle {
+  width: 14rem;
+  height: 14rem;
+}
+
+/* Thin outer ring, slightly offset for depth */
+.team-ring {
+  position: absolute;
+  bottom: -.45rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12rem;
+  height: 12rem;
+  border-radius: 9999px;
+  border: 1px dashed rgba(201, 134, 47, .3);
+  transition: transform .5s ease, border-color .35s ease;
+}
+
+.team-portrait-lg .team-ring {
+  width: 15.25rem;
+  height: 15.25rem;
+}
+
+/* Half-body shot clipped inside the circle */
+.team-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform .5s ease;
+}
+
+.team-silhouette {
+  width: 58%;
+  height: 58%;
+  margin-bottom: 12%;
+  color: rgba(201, 134, 47, .38);
+  transition: color .35s ease;
+}
+
+.team-card:hover .team-circle {
+  border-color: rgba(201, 134, 47, .5);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .45), 0 0 36px rgba(201, 134, 47, .12);
+}
+
+.team-card:hover .team-ring {
+  transform: translateX(-50%) rotate(20deg);
+  border-color: rgba(201, 134, 47, .55);
+}
+
+.team-card:hover .team-photo {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.team-card:hover .team-silhouette {
+  color: rgba(201, 134, 47, .6);
+}

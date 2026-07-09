@@ -370,11 +370,17 @@ h4 {
 
 .contact-info-card {
   height: 100%;
-  padding: 1.75rem;
+  padding: 1.5rem;
   border-radius: .125rem;
   border: 1px solid rgba(201, 134, 47, .12);
   background: linear-gradient(145deg, rgba(35, 32, 29, .9), rgba(25, 25, 25, .96));
   transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+
+@media (min-width: 1024px) {
+  .contact-info-card {
+    padding: 2rem;
+  }
 }
 
 .contact-info-card:hover {

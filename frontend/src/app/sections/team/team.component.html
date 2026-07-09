@@ -1,0 +1,29 @@
+<section id="team" class="relative py-24 lg:py-36 overflow-hidden bg-[#0e0e0e]">
+  <div class="absolute top-0 left-0 w-[30rem] h-[30rem] opacity-10 pointer-events-none [background:radial-gradient(circle,rgba(201,134,47,.4)_0%,transparent_70%)] -translate-x-[40%] -translate-y-[40%]"></div>
+  <div class="max-w-7xl mx-auto px-5 lg:px-10">
+    <div appFadeIn class="flex flex-col items-center text-center mb-14 lg:mb-20">
+      <app-section-label class="block mb-6">Unser Team</app-section-label>
+      <h2 class="text-4xl lg:text-6xl text-[#eee7df]">Die Menschen <em class="italic font-normal text-[#d89a4b]">hinter Hamta</em></h2>
+    </div>
+    <div class="flex flex-col sm:flex-row items-center sm:items-end justify-center gap-12 sm:gap-10 lg:gap-20">
+      @for (member of members; track $index; let i = $index) {
+        <figure appFadeIn [fadeDelay]="i * 120" class="team-card flex flex-col items-center text-center">
+          <div class="team-portrait" [class.team-portrait-lg]="member.featured">
+            <div class="team-ring"></div>
+            <div class="team-circle">
+              @if (member.image) {
+                <img [src]="member.image" alt="Besitzer des Hamta Restaurants" loading="lazy" class="team-photo" />
+              } @else {
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="team-silhouette"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2.25c-4.05 0-7.5 2.4-7.5 5.36 0 .77.62 1.39 1.39 1.39h12.22c.77 0 1.39-.62 1.39-1.39 0-2.96-3.45-5.36-7.5-5.36Z"/></svg>
+              }
+            </div>
+          </div>
+          <figcaption class="mt-6">
+            <span class="block text-lg font-serif font-semibold text-[#eee7df]">{{ member.role }}</span>
+            <span class="mt-2 mx-auto block h-px w-8 gold-label-line"></span>
+          </figcaption>
+        </figure>
+      }
+    </div>
+  </div>
+</section>

@@ -13,6 +13,8 @@ import { SectionLabelComponent } from '../../shared/section-label/section-label.
 export class AboutComponent {
   readonly stats = [
     { value: '2026', label: 'Eröffnung' },
-    { value: '30+', label: 'Italienische Klassiker' },
+    { value: '20+', label: 'Italienische Klassiker' },
+    { value: 'Neu', label: 'Frisch eröffnet in Urfahr' },
+    { value: 'Zentral', label: 'Bushaltestelle direkt vor der Tür' },
   ];
 }

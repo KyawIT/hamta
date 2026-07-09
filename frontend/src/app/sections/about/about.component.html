@@ -7,7 +7,7 @@
         <h2 class="mb-8 text-4xl lg:text-6xl text-[#eee7df]">Italienische Küche.<br/><em class="italic font-normal text-[#d89a4b]">Mitten in Urfahr.</em></h2>
         <div class="space-y-5 text-base leading-8 text-[#aaa199]">
           <p>Seit Juli 2026 ist Hamta ein Treffpunkt an der Urfahraner Hauptstraße. Der neue kulinarische Fokus bringt die entspannte Tischkultur Italiens nach Linz – modern interpretiert und ohne steife Regeln.</p>
-          <p>Auf der Karte stehen vertraute Klassiker: Antipasti zum Teilen, Pasta mit klaren Aromen und Pizza aus heißem Ofen. Dazu kommen wechselnde Gerichte, die sich an Saison und Markt orientieren.</p>
+          <p>Auf der Karte stehen vertraute Klassiker: Antipasti zum Teilen, Pasta mit klaren Aromen und Pizza aus heißem Ofen.</p>
           <p>Unser Anspruch bleibt bewusst einfach: sorgfältig ausgewählte Zutaten, Zeit in der Zubereitung und ein Service, bei dem man gerne noch ein wenig länger sitzen bleibt.</p>
         </div>
         <blockquote class="mt-10 pl-6 text-lg italic leading-relaxed border-l-2 border-[#c9862f] text-[#d8d0c8] font-serif">„Wenige gute Zutaten. Präzise zubereitet. Großzügig serviert.“</blockquote>
@@ -15,7 +15,7 @@
       <div appFadeIn fadeDirection="right" [fadeDelay]="150">
         <div class="relative overflow-hidden rounded-sm border border-[rgba(201,134,47,.2)] aspect-[4/5] shadow-[0_30px_80px_rgba(0,0,0,.34)]">
           <div appParallax [parallaxSpeed]="0.09" class="absolute -inset-y-[12%] inset-x-0 will-change-transform">
-            <img src="/foods/food-9.jpg" alt="Kreativ angerichtete Vorspeise im Hamta Restaurant" loading="lazy" class="h-full w-full object-cover brightness-[.78]" />
+            <img src="/assets/food-9.jpg" alt="Kreativ angerichtete Vorspeise im Hamta Restaurant" loading="lazy" class="h-full w-full object-cover brightness-[.78]" />
           </div>
           <div class="absolute inset-0 [background:linear-gradient(to_top,rgba(14,14,14,.8)_0%,transparent_55%)]"></div>
           <div class="glass-gold absolute bottom-5 left-5 right-5 p-5 sm:left-7 sm:right-auto sm:max-w-xs">
@@ -26,9 +26,9 @@
       </div>
     </div>
     <div appFadeIn class="mt-20 lg:mt-28">
-      <div class="glass-gold grid grid-cols-2 py-10 lg:py-14 rounded-sm">
+      <div class="glass-gold grid grid-cols-2 lg:grid-cols-4 gap-y-10 py-10 lg:py-14 rounded-sm">
         @for (stat of stats; track stat.label; let i = $index) {
-          <div class="flex flex-col items-center text-center px-2 sm:px-6" [class.border-l]="i > 0" [class.border-white/6]="i > 0">
+          <div class="flex flex-col items-center text-center px-2 sm:px-6" [class.border-l]="i % 2 === 1" [class.lg:border-l]="i > 0" [class.border-white/6]="i > 0">
             <span class="text-2xl sm:text-3xl lg:text-4xl font-bold font-serif text-gold-gradient">{{ stat.value }}</span>
             <span class="mt-2 text-[9px] sm:text-xs font-semibold uppercase tracking-wider text-[#aaa199] sm:tracking-widest">{{ stat.label }}</span>
           </div>

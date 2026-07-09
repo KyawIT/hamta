@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, PLATFORM_ID, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LucideClock, LucideMapPin, LucidePhone, LucideSend, LucideTruck } from '@lucide/angular';
+import { LucideClock, LucideMapPin, LucidePhone, LucideSend, LucideUsers } from '@lucide/angular';
 import { FadeInDirective } from '../../shared/fade-in.directive';
 import { SectionLabelComponent } from '../../shared/section-label/section-label.component';
 
@@ -13,7 +13,7 @@ export function buildMailto(name: string, email: string, message: string): strin
 
 @Component({
   selector: 'app-contact',
-  imports: [ReactiveFormsModule, FadeInDirective, SectionLabelComponent, LucideClock, LucideMapPin, LucidePhone, LucideSend, LucideTruck],
+  imports: [ReactiveFormsModule, FadeInDirective, SectionLabelComponent, LucideClock, LucideMapPin, LucidePhone, LucideSend, LucideUsers],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -92,7 +92,7 @@ export const RESTAURANT_SCHEMA: Record<string, unknown> = {
   telephone: '+43 732 000000',
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'Hauptstraße 42',
+    streetAddress: 'Hauptstraße 42 / Reindlstraße 1',
     addressLocality: 'Linz',
     addressRegion: 'Oberösterreich',
     postalCode: '4040',
@@ -102,9 +102,9 @@ export const RESTAURANT_SCHEMA: Record<string, unknown> = {
   openingHoursSpecification: [
     {
       '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-      opens: '11:00',
-      closes: '22:00',
+      dayOfWeek: ['Monday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '10:00',
+      closes: '23:00',
     },
   ],
   servesCuisine: ['Italienisch', 'Pizza', 'Pasta', 'Mediterran'],

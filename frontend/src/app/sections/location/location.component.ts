@@ -13,12 +13,12 @@ import { SectionLabelComponent } from '../../shared/section-label/section-label.
 export class LocationComponent {
   readonly today = new Date().toLocaleDateString('de-AT', { weekday: 'long' });
   readonly hours = [
-    { day: 'Montag', time: 'Ruhetag', closed: true },
-    { day: 'Dienstag', time: '11:00 – 22:00', closed: false },
-    { day: 'Mittwoch', time: '11:00 – 22:00', closed: false },
-    { day: 'Donnerstag', time: '11:00 – 22:00', closed: false },
-    { day: 'Freitag', time: '11:00 – 22:00', closed: false },
-    { day: 'Samstag', time: '11:00 – 22:00', closed: false },
-    { day: 'Sonntag', time: '11:00 – 22:00', closed: false },
+    { day: 'Montag', time: '10:00 – 23:00', closed: false },
+    { day: 'Dienstag', time: 'Ruhetag', closed: true },
+    { day: 'Mittwoch', time: '10:00 – 23:00', closed: false },
+    { day: 'Donnerstag', time: '10:00 – 23:00', closed: false },
+    { day: 'Freitag', time: '10:00 – 23:00', closed: false },
+    { day: 'Samstag', time: '10:00 – 23:00', closed: false },
+    { day: 'Sonntag', time: '10:00 – 23:00', closed: false },
   ];
 }

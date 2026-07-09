@@ -10,10 +10,11 @@ import { HeroComponent } from '../../sections/hero/hero.component';
 import { LocationComponent } from '../../sections/location/location.component';
 import { MenuComponent } from '../../sections/menu/menu.component';
 import { DrinksComponent } from '../../sections/drinks/drinks.component';
+import { TeamComponent } from '../../sections/team/team.component';
 
 @Component({
   selector: 'app-home-page',
-  imports: [HeaderComponent, MobileNavComponent, FooterComponent, HeroComponent, AboutComponent, MenuComponent, DrinksComponent, GalleryComponent, LocationComponent, ContactComponent],
+  imports: [HeaderComponent, MobileNavComponent, FooterComponent, HeroComponent, AboutComponent, TeamComponent, MenuComponent, DrinksComponent, GalleryComponent, LocationComponent, ContactComponent],
   templateUrl: './home.page.html',
   styleUrl: './home.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +23,7 @@ export class HomePage {
   constructor() {
     inject(SeoService).apply({
       title: 'Hamta Restaurant – Italienische Küche & Pizza in Linz',
-      description: 'Italienisches Restaurant und Pizzeria in Linz-Urfahr mit Antipasti, Pasta, Pizza und Dolci. Di–So 11–22 Uhr, Hauptstraße 42.',
+      description: 'Italienisches Restaurant und Pizzeria in Linz-Urfahr mit Antipasti, Pasta, Pizza und Dolci. Mi–Mo 10–23 Uhr, Hauptstraße 42 / Reindlstraße 1.',
       canonical: 'https://hamtarestaurant.at',
       openGraph: true,
       jsonLd: RESTAURANT_SCHEMA,
