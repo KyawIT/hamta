@@ -1,6 +1,12 @@
-<header class="mb-6">
-  <p class="section-label mb-2">Verwaltung</p>
-  <h1 class="font-serif text-2xl font-semibold text-on-surface">Speisekarte</h1>
+<header class="menu-header">
+  <div>
+    <p class="section-label mb-2">Verwaltung</p>
+    <h1 class="font-serif text-2xl font-semibold text-on-surface">Speisekarte</h1>
+  </div>
+  <button type="button" class="btn-gold menu-add" (click)="openNew()">
+    <svg lucidePlus [size]="16"></svg>
+    Neues Gericht
+  </button>
 </header>
 
 <!-- Kategorie-Umschaltung -->
@@ -22,6 +28,7 @@
 @if (dishes().length === 0) {
   <div class="menu-empty">
     Noch keine Gerichte in „{{ activeCategory().label }}".
+    <button type="button" class="menu-empty__link" (click)="openNew()">Erstes Gericht anlegen</button>
   </div>
 } @else {
   <ul class="menu-list">
@@ -43,8 +50,118 @@
           @if (dish.zutaten) {
             <p class="dish__zutaten">{{ dish.zutaten }}</p>
           }
+          <div class="dish__actions">
+            <button type="button" class="dish__btn" (click)="openEdit(dish)">
+              <svg lucidePencil [size]="14"></svg> Bearbeiten
+            </button>
+            <button type="button" class="dish__btn dish__btn--danger" (click)="askDelete(dish)">
+              <svg lucideTrash2 [size]="14"></svg> Löschen
+            </button>
+          </div>
         </div>
       </li>
     }
   </ul>
+}
+
+<!-- ─── Formular-Modal ─────────────────────────────────────── -->
+@if (editing() !== null) {
+  <div class="modal">
+    <div class="modal__scrim" (click)="closeForm()"></div>
+    <div class="modal__card" role="dialog" aria-modal="true">
+      <div class="modal__head">
+        <h2 class="modal__title">
+          {{ isEditing() ? 'Gericht bearbeiten' : 'Neues Gericht' }}
+          <span class="modal__cat">{{ formCategory().label }}</span>
+        </h2>
+        <button type="button" class="modal__close" (click)="closeForm()" aria-label="Schließen">
+          <svg lucideX [size]="18"></svg>
+        </button>
+      </div>
+
+      <form class="modal__form" (ngSubmit)="save()">
+        <div>
+          <label class="form-label" for="f-name">Name</label>
+          <input
+            id="f-name"
+            class="form-control"
+            type="text"
+            [ngModel]="formName()"
+            (ngModelChange)="formName.set($event)"
+            name="name"
+            placeholder="z.B. Cremige Burrata"
+          />
+        </div>
+
+        @if (formCategory().hasZutaten) {
+          <div>
+            <label class="form-label" for="f-zutaten">Zutaten / Beschreibung</label>
+            <textarea
+              id="f-zutaten"
+              class="form-control"
+              rows="3"
+              [ngModel]="formZutaten()"
+              (ngModelChange)="formZutaten.set($event)"
+              name="zutaten"
+              placeholder="Kurze Beschreibung der Zutaten"
+            ></textarea>
+          </div>
+        }
+
+        <div class="modal__row">
+          <div>
+            <label class="form-label" for="f-preis">Preis (€)</label>
+            <input
+              id="f-preis"
+              class="form-control"
+              type="text"
+              inputmode="decimal"
+              [ngModel]="formPreis()"
+              (ngModelChange)="formPreis.set($event)"
+              name="preis"
+              placeholder="12,90"
+            />
+          </div>
+          <div>
+            <label class="form-label" for="f-image">Bild-URL (optional)</label>
+            <input
+              id="f-image"
+              class="form-control"
+              type="text"
+              [ngModel]="formImageUrl()"
+              (ngModelChange)="formImageUrl.set($event)"
+              name="imageUrl"
+              placeholder="https://…"
+            />
+          </div>
+        </div>
+
+        @if (formError()) {
+          <p class="modal__error">{{ formError() }}</p>
+        }
+
+        <div class="modal__foot">
+          <button type="button" class="btn-outline" (click)="closeForm()">Abbrechen</button>
+          <button type="submit" class="btn-gold">Speichern</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- ─── Lösch-Bestätigung ──────────────────────────────────── -->
+@if (deleting(); as dish) {
+  <div class="modal">
+    <div class="modal__scrim" (click)="cancelDelete()"></div>
+    <div class="modal__card modal__card--sm" role="dialog" aria-modal="true">
+      <h2 class="modal__title">Gericht löschen?</h2>
+      <p class="modal__text">
+        „{{ dish.name }}" wird dauerhaft entfernt. Das kann nicht rückgängig gemacht werden.
+      </p>
+      <div class="modal__foot">
+        <button type="button" class="btn-outline" (click)="cancelDelete()">Abbrechen</button>
+        <button type="button" class="btn-danger" (click)="confirmDelete()">Löschen</button>
+      </div>
+    </div>
+  </div>
 }
