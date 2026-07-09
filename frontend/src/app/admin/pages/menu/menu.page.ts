@@ -10,7 +10,7 @@ import {
 } from '@lucide/angular';
 
 import { MenuAdminService } from '../../menu/menu-admin.service';
-import { CATEGORIES, CategoryId, Dish } from '../../menu/menu.model';
+import { CATEGORIES, CATEGORY_GROUPS, Category, CategoryGroup, CategoryId, Dish } from '../../menu/menu.model';
 
 /** Maximale Kantenlänge, auf die hochgeladene Fotos verkleinert werden. */
 const MAX_IMAGE_SIZE = 900;
@@ -34,7 +34,8 @@ export class MenuPage {
   private readonly menu = inject(MenuAdminService);
 
   readonly categories = CATEGORIES;
-  readonly activeId = signal<CategoryId>('starter');
+  readonly groups = CATEGORY_GROUPS;
+  readonly activeId = signal<CategoryId>('vorspeisen');
 
   readonly activeCategory = computed(
     () => this.categories.find((c) => c.id === this.activeId()) ?? this.categories[0],
@@ -46,6 +47,7 @@ export class MenuPage {
   // ─── Formular-Zustand ──────────────────────────────────────
   /** null = geschlossen, sonst die zu bearbeitende ID bzw. 'new'. */
   readonly editing = signal<number | 'new' | null>(null);
+  readonly formCategoryId = signal<CategoryId>('vorspeisen');
   readonly formName = signal('');
   readonly formZutaten = signal('');
   readonly formPreis = signal('');
@@ -53,8 +55,11 @@ export class MenuPage {
   readonly formError = signal('');
   readonly imageLoading = signal(false);
 
-  readonly formCategory = computed(() => this.activeCategory());
   readonly isEditing = computed(() => typeof this.editing() === 'number');
+
+  categoriesOf(group: CategoryGroup): Category[] {
+    return this.categories.filter((c) => c.group === group);
+  }
 
   // ─── Löschen ───────────────────────────────────────────────
   readonly deleting = signal<Dish | null>(null);
@@ -74,10 +79,12 @@ export class MenuPage {
   // ─── Formular öffnen/schließen ─────────────────────────────
   openNew(): void {
     this.resetForm();
+    this.formCategoryId.set(this.activeId());
     this.editing.set('new');
   }
 
   openEdit(dish: Dish): void {
+    this.formCategoryId.set(dish.category);
     this.formName.set(dish.name);
     this.formZutaten.set(dish.zutaten);
     this.formPreis.set(dish.preis == null ? '' : String(dish.preis).replace('.', ','));
@@ -105,9 +112,9 @@ export class MenuPage {
     }
 
     const input = {
-      category: this.activeId(),
+      category: this.formCategoryId(),
       name,
-      zutaten: this.formCategory().hasZutaten ? this.formZutaten().trim() : '',
+      zutaten: this.formZutaten().trim(),
       preis,
       imageUrl: this.formImageUrl() || undefined,
     };
@@ -118,6 +125,8 @@ export class MenuPage {
     } else {
       this.menu.add(input);
     }
+    // Zur Kategorie des gespeicherten Gerichts wechseln, damit es sichtbar ist.
+    this.activeId.set(input.category);
     this.closeForm();
   }
 

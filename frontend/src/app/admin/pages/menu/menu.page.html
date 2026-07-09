@@ -72,7 +72,6 @@
       <div class="modal__head">
         <h2 class="modal__title">
           {{ isEditing() ? 'Gericht bearbeiten' : 'Neues Gericht' }}
-          <span class="modal__cat">{{ formCategory().label }}</span>
         </h2>
         <button type="button" class="modal__close" (click)="closeForm()" aria-label="Schließen">
           <svg lucideX [size]="18"></svg>
@@ -80,6 +79,25 @@
       </div>
 
       <form class="modal__form" (ngSubmit)="save()">
+        <div>
+          <label class="form-label" for="f-category">Kategorie</label>
+          <select
+            id="f-category"
+            class="form-control"
+            [ngModel]="formCategoryId()"
+            (ngModelChange)="formCategoryId.set($event)"
+            name="category"
+          >
+            @for (group of groups; track group.id) {
+              <optgroup [label]="group.label">
+                @for (cat of categoriesOf(group.id); track cat.id) {
+                  <option [value]="cat.id">{{ cat.label }}</option>
+                }
+              </optgroup>
+            }
+          </select>
+        </div>
+
         <div>
           <label class="form-label" for="f-name">Name</label>
           <input
@@ -93,20 +111,18 @@
           />
         </div>
 
-        @if (formCategory().hasZutaten) {
-          <div>
-            <label class="form-label" for="f-zutaten">Zutaten / Beschreibung</label>
-            <textarea
-              id="f-zutaten"
-              class="form-control"
-              rows="3"
-              [ngModel]="formZutaten()"
-              (ngModelChange)="formZutaten.set($event)"
-              name="zutaten"
-              placeholder="Kurze Beschreibung der Zutaten"
-            ></textarea>
-          </div>
-        }
+        <div>
+          <label class="form-label" for="f-zutaten">Zutaten / Beschreibung</label>
+          <textarea
+            id="f-zutaten"
+            class="form-control"
+            rows="3"
+            [ngModel]="formZutaten()"
+            (ngModelChange)="formZutaten.set($event)"
+            name="zutaten"
+            placeholder="Kurze Beschreibung der Zutaten"
+          ></textarea>
+        </div>
 
         <div>
           <label class="form-label" for="f-preis">Preis (€)</label>
