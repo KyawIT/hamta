@@ -32,21 +32,21 @@
       </a>
       <a
         class="admin__link"
+        routerLink="/admin/gallery"
+        routerLinkActive="admin__link--active"
+        (click)="closeSidebar()"
+      >
+        <svg lucideImages [size]="18"></svg>
+        Galerie
+      </a>
+      <a
+        class="admin__link"
         routerLink="/admin/reservations"
         routerLinkActive="admin__link--active"
         (click)="closeSidebar()"
       >
         <svg lucideCalendarCheck [size]="18"></svg>
         Reservierungen
-      </a>
-      <a
-        class="admin__link"
-        routerLink="/admin/settings"
-        routerLinkActive="admin__link--active"
-        (click)="closeSidebar()"
-      >
-        <svg lucideSettings [size]="18"></svg>
-        Einstellungen
       </a>
     </nav>
 
