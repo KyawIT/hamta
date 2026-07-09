@@ -1,0 +1,114 @@
+<!-- ─── Kopf ───────────────────────────────────────────────── -->
+<header class="head">
+  <div class="head__titles">
+    <p class="section-label mb-2">Verwaltung</p>
+    <h1 class="head__h1 font-serif">Galerie</h1>
+    <p class="head__sub">
+      <span class="head__count" [class.head__count--full]="isFull()">{{ count() }} / {{ max }}</span>
+      Bildern belegt
+    </p>
+  </div>
+
+  <button type="button" class="btn-gold head__add" [disabled]="isFull() || uploading()" (click)="fileInput.click()">
+    @if (uploading()) {
+      <svg lucideLoaderCircle [size]="16" class="spin"></svg> Lädt…
+    } @else {
+      <svg lucideUpload [size]="16"></svg> Bilder hochladen
+    }
+  </button>
+</header>
+
+<p class="hint">
+  Diese Bilder erscheinen auf der Startseite unter „Ein Blick an unseren Tisch". Reihenfolge per
+  Pfeile anpassen – das erste Bild ist das Titelbild. Maximal {{ max }} Bilder.
+</p>
+
+<input #fileInput type="file" accept="image/*" multiple hidden (change)="onFilesSelected($event)" />
+
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}
+
+<!-- ─── Grid ───────────────────────────────────────────────── -->
+@if (count() === 0) {
+  <button type="button" class="empty" (click)="fileInput.click()">
+    <svg lucideImagePlus [size]="30"></svg>
+    <span class="empty__title">Noch keine Bilder</span>
+    <span class="empty__hint">Tippe hier, um Fotos vom Gerät hochzuladen</span>
+  </button>
+} @else {
+  <div class="grid">
+    @for (img of images(); track img.id; let i = $index; let first = $first; let last = $last) {
+      <figure class="tile">
+        <div class="tile__media">
+          <img [src]="img.url" [alt]="img.caption || 'Galeriebild'" />
+
+          @if (first) {
+            <span class="tile__cover"><svg lucideStar [size]="12"></svg> Titelbild</span>
+          }
+
+          <div class="tile__tools">
+            <button
+              type="button"
+              class="tile__btn"
+              [disabled]="first"
+              (click)="move(img.id, -1)"
+              aria-label="Nach vorne"
+            >
+              <svg lucideChevronLeft [size]="16"></svg>
+            </button>
+            <button
+              type="button"
+              class="tile__btn"
+              [disabled]="last"
+              (click)="move(img.id, 1)"
+              aria-label="Nach hinten"
+            >
+              <svg lucideChevronRight [size]="16"></svg>
+            </button>
+            <button
+              type="button"
+              class="tile__btn tile__btn--danger"
+              (click)="askDelete(img)"
+              aria-label="Löschen"
+            >
+              <svg lucideTrash2 [size]="15"></svg>
+            </button>
+          </div>
+        </div>
+
+        <input
+          class="tile__caption"
+          type="text"
+          [value]="img.caption"
+          (input)="onCaption(img.id, $event)"
+          placeholder="Bildunterschrift (optional)"
+        />
+      </figure>
+    }
+
+    @if (!isFull()) {
+      <button type="button" class="add-tile" [disabled]="uploading()" (click)="fileInput.click()">
+        <svg lucideImagePlus [size]="26"></svg>
+        <span>Bild hinzufügen</span>
+        <span class="add-tile__hint">{{ max - count() }} frei</span>
+      </button>
+    }
+  </div>
+}
+
+<!-- ─── Lösch-Bestätigung ──────────────────────────────────── -->
+@if (deleting(); as img) {
+  <div class="modal">
+    <div class="modal__scrim" (click)="cancelDelete()"></div>
+    <div class="modal__card" role="dialog" aria-modal="true">
+      <div class="modal__grip"></div>
+      <h2 class="modal__title font-serif">Bild entfernen?</h2>
+      <p class="modal__text">Dieses Bild wird aus der Galerie entfernt.</p>
+      <div class="modal__foot">
+        <button type="button" class="btn-outline" (click)="cancelDelete()">Abbrechen</button>
+        <button type="button" class="btn-danger" (click)="confirmDelete()">Entfernen</button>
+      </div>
+    </div>
+  </div>
+}
