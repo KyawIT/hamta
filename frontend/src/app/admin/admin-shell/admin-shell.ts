@@ -3,10 +3,10 @@ import { Meta } from '@angular/platform-browser';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {
   LucideCalendarCheck,
+  LucideImages,
   LucideLayoutDashboard,
   LucideLogOut,
   LucidePanelLeft,
-  LucideSettings,
   LucideUtensilsCrossed,
 } from '@lucide/angular';
 
@@ -19,10 +19,10 @@ import { AuthService } from '../auth/auth.service';
     RouterLinkActive,
     RouterOutlet,
     LucideCalendarCheck,
+    LucideImages,
     LucideLayoutDashboard,
     LucideLogOut,
     LucidePanelLeft,
-    LucideSettings,
     LucideUtensilsCrossed,
   ],
   templateUrl: './admin-shell.html',

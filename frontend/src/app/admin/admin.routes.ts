@@ -26,15 +26,15 @@ export const adminRoutes: Routes = [
         loadComponent: () => import('./pages/menu/menu.page').then((m) => m.MenuPage),
       },
       {
+        path: 'gallery',
+        title: 'Galerie | Hamta Admin',
+        loadComponent: () => import('./pages/gallery/gallery.page').then((m) => m.GalleryPage),
+      },
+      {
         path: 'reservations',
         title: 'Reservierungen | Hamta Admin',
         loadComponent: () =>
           import('./pages/reservations/reservations.page').then((m) => m.ReservationsPage),
-      },
-      {
-        path: 'settings',
-        title: 'Einstellungen | Hamta Admin',
-        loadComponent: () => import('./pages/settings/settings.page').then((m) => m.SettingsPage),
       },
     ],
   },

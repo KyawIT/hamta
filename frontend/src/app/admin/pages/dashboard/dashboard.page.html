@@ -1,0 +1,28 @@
+<header class="mb-8">
+  <p class="section-label mb-2">Übersicht</p>
+  <h1 class="font-serif text-2xl font-semibold text-on-surface">Willkommen zurück</h1>
+  <p class="mt-1 text-sm text-outline-dim">Verwalte hier die Inhalte deiner Website.</p>
+</header>
+
+<div class="cards">
+  <a routerLink="/admin/menu" class="card">
+    <div class="card__icon"><svg lucideUtensilsCrossed [size]="20"></svg></div>
+    <p class="card__label">Speisekarte</p>
+    <p class="card__value">{{ dishCount().length }} <span class="card__unit">Gerichte</span></p>
+    <span class="card__go">Verwalten <svg lucideChevronRight [size]="15"></svg></span>
+  </a>
+
+  <a routerLink="/admin/gallery" class="card">
+    <div class="card__icon"><svg lucideImages [size]="20"></svg></div>
+    <p class="card__label">Galerie</p>
+    <p class="card__value">{{ galleryCount() }} <span class="card__unit">/ {{ maxGallery }} Bilder</span></p>
+    <span class="card__go">Verwalten <svg lucideChevronRight [size]="15"></svg></span>
+  </a>
+
+  <div class="card card--soon">
+    <div class="card__icon"><svg lucideCalendarCheck [size]="20"></svg></div>
+    <p class="card__label">Reservierungen</p>
+    <p class="card__value card__value--muted">—</p>
+    <span class="card__soon">Bald verfügbar</span>
+  </div>
+</div>

@@ -27,11 +27,14 @@ Diese Punkte sollten **im Team** geklärt werden, bevor weitergebaut wird:
 
 - [x] Grundgerüst (Shell, Routing, Layout)
 - [x] Platzhalter-Login + Guard
+- [x] **Dashboard** – Übersicht mit echten Zahlen + Schnell-Links
 - [x] **Speisekarte-Verwaltung** (`/admin/menu`) – UI fertig (In-Memory, mobile-first)
-- [ ] `/admin/menu` an die echte API + Bild-Upload anbinden – *nach Kategorie-Entscheidung*
+- [x] **Galerie-Verwaltung** (`/admin/gallery`) – UI fertig, Upload max. 10 Bilder (In-Memory)
+- [ ] `/admin/menu` + `/admin/gallery` an die echte API + Bild-Upload anbinden
 - [ ] **Reservierungen** (`/admin/reservations`) – *braucht neues Backend*
-- [ ] **Einstellungen / Öffnungszeiten** (`/admin/settings`) – *braucht neues Backend*
 - [ ] Echter Login über Keycloak (ersetzt Platzhalter)
+
+> Öffnungszeiten/Einstellungen wurden bewusst verworfen (nicht benötigt).
 
 ### Backend
 
