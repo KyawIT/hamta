@@ -20,25 +20,33 @@ Das Projekt besteht aus vier Teilen:
 
 ## Backend – Speisekarte-API
 
-Basis-URL: `http://localhost:8080`
+Basis-URL: `http://localhost:8080` · Swagger-UI im Dev-Modus aktiv.
 
-Drei Gericht-Kategorien, jeweils als eigene Tabelle/Entity/Resource:
+**Fünf** Gericht-Kategorien, jeweils als eigene Tabelle/Entity/Resource:
+`Starter`, `MainCourse`, `Dessert`, `Cocktail`, `Beverage`. Bilder sind in eine
+eigene `Image`-Entity ausgelagert (Fremdschlüssel `image_id`).
 
 ### Datenmodell (aktuell)
 
-Alle drei Entities (`Vorspeise`, `Hauptspeise`, `Nachspeise`) sind **identisch** aufgebaut:
+Speise-Entities (`Starter`, `MainCourse`, `Dessert`, `Cocktail`) sind gleich aufgebaut:
 
 | Feld | Typ | Bemerkung |
 | ---- | --- | --------- |
 | `id` | Long | automatisch (DB-Sequence, Increment 50) |
 | `name` | String | Pflichtfeld |
-| `imageUrl` | String | optional, wird beim Bild-Upload gesetzt |
+| `zutaten` | Text | Beschreibung / Zutaten |
+| `preis` | BigDecimal(10,2) | Preis in Euro |
+| `image` | → `Image` | optionaler Fremdschlüssel |
 
-> ⚠️ Noch **keine** Felder für Preis, Beschreibung, Allergene o.ä. – siehe offene Punkte in [roadmap.md](roadmap.md).
+`Beverage` ist identisch, **ohne** `zutaten`. `Image` hat nur `id` + `url`.
+
+> ⚠️ **Modell-Lücke:** Die Website zeigt feinere Kategorien (Steaks, Pizza, Salate,
+> Aperitifs, Bier …), die im Backend alle in `main_course` bzw. `cocktail`/`beverage`
+> zusammenfallen. Sauber wäre eine **Category-Entity** statt fester Tabellen – siehe [roadmap.md](roadmap.md).
 
 ### Endpoints
 
-Für jede Kategorie identisch (`vorspeisen` / `hauptspeisen` / `nachspeisen`):
+Für jede Kategorie identisch (`starters` / `main-courses` / `desserts` / `cocktails` / `beverages`):
 
 | Methode | Pfad | Zweck |
 | ------- | ---- | ----- |
@@ -48,19 +56,29 @@ Für jede Kategorie identisch (`vorspeisen` / `hauptspeisen` / `nachspeisen`):
 | `PUT` | `/api/{kategorie}/{id}` | Bearbeiten |
 | `DELETE` | `/api/{kategorie}/{id}` | Löschen |
 
-### Bild-Upload
+### Bild-Upload & -Sync
 
 | Methode | Pfad | Zweck |
 | ------- | ---- | ----- |
 | `POST` | `/api/images/upload/{category}/{id}` | Bild (Multipart `file`) hochladen |
+| `POST` | `/api/images/sync` | MinIO-Bucket auslesen, fehlende URLs in `image` anlegen |
 
-Ablauf: Bild → auf max. 1200px verkleinert → als **WebP** konvertiert → in MinIO gespeichert → URL automatisch in `image_url` des Gerichts geschrieben. Erlaubte Kategorien: `vorspeise`, `hauptspeise`, `nachspeise`.
+Upload-Ablauf: Bild → auf max. 1200px verkleinert → als **WebP** konvertiert → in MinIO
+gespeichert → URL in die `image`-Tabelle geschrieben. Kategorien: `vorspeise`, `hauptspeise`, `nachspeise`.
+
+### Seed-Daten (offen)
+
+Es gibt zwei sich überschneidende Seed-Dateien (`backend/.../import.sql`, `seed_speisekarte.sql`
+im Root), die **nicht** automatisch laufen → DB startet leer. Empfehlung: **eine** Flyway-Migration
+als Quelle der Wahrheit. Siehe [roadmap.md](roadmap.md).
 
 ## Sicherheit (Status)
 
-- Keycloak läuft im docker-compose und die Dependency ist im Backend vorhanden.
-- **Aber:** Es gibt keine OIDC-Konfiguration und keine `@RolesAllowed`-Annotationen → **die API ist aktuell offen.**
-- Frontend-Login ist derzeit ein Platzhalter (`AuthService`), 1:1 gegen Keycloak austauschbar.
+- Keycloak läuft im docker-compose, OIDC ist im Backend für `%dev` **konfiguriert**
+  (`http://localhost:8081/realms/hamta`, Client `backend`).
+- **Aber:** Der Realm `hamta` muss in Keycloak noch angelegt werden, und die Endpoints haben
+  **kein** `@RolesAllowed` → **die API ist aktuell offen.**
+- Frontend-Login ist ein Platzhalter (`AuthService`), 1:1 gegen Keycloak austauschbar.
 
 ## Was es noch NICHT gibt
 
