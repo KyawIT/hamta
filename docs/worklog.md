@@ -5,9 +5,34 @@ Format pro Eintrag: **Datum – Person – Bereich**, dann kurz *Was* und *Warum
 
 ---
 
+## 2026-07-09 – Obaid – Frontend: Galerie + Dashboard, Aufräumen
+
+**Branch:** `feature/admin-gallery`
+
+### Was gemacht
+
+- **Galerie-Verwaltung** (`/admin/gallery`): Bilder für die Startseiten-Sektion „Ein Blick an
+  unseren Tisch" verwalten. Upload vom Gerät (Mehrfachauswahl, client-seitige Verkleinerung),
+  **max. 10 Bilder**, Bildunterschrift, Sortier-Pfeile, Titelbild-Badge. Noch In-Memory.
+- **Dashboard** zu einer echten Übersicht ausgebaut (Anzahl Gerichte + Galerie-Bilder, Schnell-Links).
+- **Einstellungen/Öffnungszeiten entfernt** (nicht benötigt) – Nav zeigt jetzt
+  Dashboard · Speisekarte · Galerie · Reservierungen.
+- Geteilte `downscale-image`-Hilfsfunktion (von Galerie genutzt).
+
+### Warum
+
+Der Admin soll neben der Speisekarte auch die Startseiten-Galerie pflegen können; 10 Bilder passen
+zum Platz auf der Seite. Settings wurde gestrichen, da keine Öffnungszeiten-Verwaltung gebraucht wird.
+
+### Nächster geplanter Schritt
+
+- Reservierungen (braucht Backend) oder Anbindung von Menu/Galerie an die echte API.
+
+---
+
 ## 2026-07-09 – Obaid – Frontend: Speisekarten-Verwaltung
 
-**Branch:** `feature/admin-menu`
+**Branch:** `feature/admin-menu` (in `main` gemergt)
 
 ### Was gemacht
 
