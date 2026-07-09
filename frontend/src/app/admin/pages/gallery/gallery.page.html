@@ -23,7 +23,7 @@
   Pfeile anpassen – das erste Bild ist das Titelbild. Maximal {{ max }} Bilder.
 </p>
 
-<input #fileInput type="file" accept="image/*" multiple hidden (change)="onFilesSelected($event)" />
+<input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
 
 @if (error()) {
   <p class="error">{{ error() }}</p>
@@ -81,8 +81,8 @@
           class="tile__caption"
           type="text"
           [value]="img.caption"
-          (input)="onCaption(img.id, $event)"
-          placeholder="Bildunterschrift (optional)"
+          (input)="onName(img.id, $event)"
+          placeholder="Name des Bildes"
         />
       </figure>
     }
@@ -94,6 +94,39 @@
         <span class="add-tile__hint">{{ max - count() }} frei</span>
       </button>
     }
+  </div>
+}
+
+<!-- ─── Namens-Dialog beim Hochladen ───────────────────────── -->
+@if (pendingImage(); as url) {
+  <div class="modal">
+    <div class="modal__scrim" (click)="cancelUpload()"></div>
+    <div class="modal__card modal__card--upload" role="dialog" aria-modal="true">
+      <div class="modal__grip"></div>
+      <h2 class="modal__title font-serif">Bild benennen</h2>
+
+      <div class="upload-preview">
+        <img [src]="url" alt="Vorschau" />
+      </div>
+
+      <div class="upload-field">
+        <label class="form-label" for="g-name">Name des Bildes</label>
+        <input
+          id="g-name"
+          class="form-control"
+          type="text"
+          [ngModel]="pendingName()"
+          (ngModelChange)="pendingName.set($event)"
+          placeholder="z.B. Frisch gebackene Pizza"
+          autofocus
+        />
+      </div>
+
+      <div class="modal__foot">
+        <button type="button" class="btn-outline" (click)="cancelUpload()">Abbrechen</button>
+        <button type="button" class="btn-gold" (click)="confirmUpload()">Hinzufügen</button>
+      </div>
+    </div>
   </div>
 }
 

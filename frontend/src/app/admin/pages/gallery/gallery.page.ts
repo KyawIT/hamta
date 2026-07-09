@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
   LucideChevronLeft,
   LucideChevronRight,
@@ -15,6 +16,7 @@ import { GalleryImage, GalleryService, MAX_GALLERY_IMAGES } from '../../gallery/
 @Component({
   selector: 'app-admin-gallery',
   imports: [
+    FormsModule,
     LucideChevronLeft,
     LucideChevronRight,
     LucideImagePlus,
@@ -38,44 +40,54 @@ export class GalleryPage {
   readonly uploading = signal(false);
   readonly error = signal('');
 
+  // Ausstehender Upload: Bild ist verkleinert und wartet auf einen Namen.
+  readonly pendingImage = signal<string | null>(null);
+  readonly pendingName = signal('');
+
   readonly deleting = signal<GalleryImage | null>(null);
 
-  async onFilesSelected(event: Event): Promise<void> {
+  async onFileSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
-    const files = Array.from(input.files ?? []);
+    const file = input.files?.[0];
     input.value = '';
-    if (!files.length) return;
+    if (!file) return;
 
-    const imageFiles = files.filter((f) => f.type.startsWith('image/'));
-    if (!imageFiles.length) {
-      this.error.set('Bitte Bilddateien auswählen.');
+    if (!file.type.startsWith('image/')) {
+      this.error.set('Bitte eine Bilddatei auswählen.');
+      return;
+    }
+    if (this.gallery.isFull()) {
+      this.error.set(`Maximal ${this.max} Bilder erreicht.`);
       return;
     }
 
     this.error.set('');
     this.uploading.set(true);
-
-    let skipped = 0;
-    for (const file of imageFiles) {
-      if (this.gallery.isFull()) {
-        skipped++;
-        continue;
-      }
-      try {
-        const url = await downscaleImage(file);
-        this.gallery.add(url);
-      } catch {
-        skipped++;
-      }
-    }
-
-    this.uploading.set(false);
-    if (skipped > 0) {
-      this.error.set(`Maximal ${this.max} Bilder – ${skipped} wurde(n) nicht hinzugefügt.`);
+    try {
+      const url = await downscaleImage(file);
+      this.pendingName.set('');
+      this.pendingImage.set(url);
+    } catch {
+      this.error.set('Foto konnte nicht geladen werden.');
+    } finally {
+      this.uploading.set(false);
     }
   }
 
-  onCaption(id: number, event: Event): void {
+  confirmUpload(): void {
+    const url = this.pendingImage();
+    if (!url) return;
+    this.gallery.add(url, this.pendingName().trim());
+    this.pendingImage.set(null);
+    this.pendingName.set('');
+  }
+
+  cancelUpload(): void {
+    this.pendingImage.set(null);
+    this.pendingName.set('');
+  }
+
+  onName(id: number, event: Event): void {
     this.gallery.updateCaption(id, (event.target as HTMLInputElement).value);
   }
 
