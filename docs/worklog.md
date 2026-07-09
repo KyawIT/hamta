@@ -5,6 +5,45 @@ Format pro Eintrag: **Datum – Person – Bereich**, dann kurz *Was* und *Warum
 
 ---
 
+## 2026-07-09 – Obaid – Frontend: Admin-Speisekarte an echte API angebunden
+
+**Branch:** `feature/admin-menu-api`
+
+### Was gemacht
+
+- **`/admin/menu` nutzt jetzt das echte Backend** statt der In-Memory-Beispieldaten.
+  Anlegen / Bearbeiten / Löschen von Gerichten sind **dauerhaft** (landen in der DB).
+  - `MenuAdminService` neu als HTTP-Adapter: lädt `/api/dishes` + `/api/drinks`,
+    vereint sie zu einer `Dish`-Liste und routet Änderungen anhand der Kategorie-Gruppe
+    an den richtigen Endpoint (Speise → `dishes`/`ingredients`, Getränk → `drinks`/`description`).
+  - **Foto-Upload geht echt zu MinIO** (`POST /api/images/upload`), Bild-URL/ID werden gespeichert.
+  - Kategorie-Mapping: Frontend-Slugs (`steaks`, …) ↔ numerische Backend-IDs (1–16) über
+    `backendId` in `menu.model.ts`.
+  - Lade-/Speicher-Feedback (Fehlermeldung, „Speichert…"-Button).
+- **Dev-Proxy** (`proxy.conf.json`): `/api` → `:8080`, umgeht CORS im Dev. `HttpClient` in
+  `app.config.ts` bereitgestellt.
+- **Build-Fix:** `anyComponentStyle`-Budget in `angular.json` auf 8/16 kB angehoben – der
+  Production-Build war schon vorher wegen `menu.page.css` (>8 kB) kaputt, fiel nur nicht auf,
+  weil der Dev-Server keine Budgets prüft.
+
+### Warum
+
+Das Backend liefert seit dem Consolidate-Refactor echte Daten; der Admin bearbeitete aber nur
+flüchtige Beispieldaten. Jetzt ist die Speisekarte-Verwaltung durchgängig funktionsfähig.
+
+### Verifiziert
+
+CRUD + Bild-Upload end-to-end über den Proxy getestet (POST 201 / PUT 200 / DELETE 204,
+Upload → öffentliche MinIO-WebP-URL). Frontend-Production-Build grün.
+
+### Nächster geplanter Schritt
+
+- **Galerie** an die API anbinden – **braucht erst einen Backend-Endpoint** (Reihenfolge,
+  max. 10, Titelbild); die generische `image`-Tabelle allein reicht dafür nicht.
+- Öffentliche `/menu`-Seite ggf. auch auf die echte API umstellen.
+
+---
+
 ## 2026-07-09 – Obaid – Frontend: Galerie + Dashboard, Aufräumen
 
 **Branch:** `feature/admin-gallery`

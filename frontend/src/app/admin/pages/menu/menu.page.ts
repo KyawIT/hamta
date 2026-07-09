@@ -19,10 +19,8 @@ import {
   CategoryGroup,
   CategoryId,
   Dish,
+  DishInput,
 } from '../../menu/menu.model';
-
-/** Maximale Kantenlänge, auf die hochgeladene Fotos verkleinert werden. */
-const MAX_IMAGE_SIZE = 900;
 
 @Component({
   selector: 'app-admin-menu',
@@ -77,13 +75,20 @@ export class MenuPage {
 
   // ─── Formular-Zustand ──────────────────────────────────────
   readonly editing = signal<number | 'new' | null>(null);
+  /** Das gerade bearbeitete Gericht (für korrektes Endpoint-Routing beim Speichern). */
+  readonly editingDish = signal<Dish | null>(null);
   readonly formCategoryId = signal<CategoryId>('vorspeisen');
   readonly formName = signal('');
   readonly formZutaten = signal('');
   readonly formPreis = signal('');
   readonly formImageUrl = signal('');
+  readonly formImageId = signal<number | null>(null);
   readonly formError = signal('');
   readonly imageLoading = signal(false);
+  readonly saving = signal(false);
+
+  /** Ladefehler beim Abruf der Speisekarte (vom Service). */
+  readonly loadError = this.menu.error;
 
   readonly isEditing = computed(() => typeof this.editing() === 'number');
 
@@ -133,16 +138,19 @@ export class MenuPage {
   // ─── Formular öffnen/schließen ─────────────────────────────
   openNew(): void {
     this.resetForm();
-    this.formCategoryId.set(this.isSearching() ? this.activeId() : this.activeId());
+    this.editingDish.set(null);
+    this.formCategoryId.set(this.activeId());
     this.editing.set('new');
   }
 
   openEdit(dish: Dish): void {
+    this.editingDish.set(dish);
     this.formCategoryId.set(dish.category);
     this.formName.set(dish.name);
     this.formZutaten.set(dish.zutaten);
     this.formPreis.set(dish.preis == null ? '' : String(dish.preis).replace('.', ','));
     this.formImageUrl.set(dish.imageUrl ?? '');
+    this.formImageId.set(dish.imageId ?? null);
     this.formError.set('');
     this.imageLoading.set(false);
     this.editing.set(dish.id);
@@ -152,7 +160,7 @@ export class MenuPage {
     this.editing.set(null);
   }
 
-  save(): void {
+  async save(): Promise<void> {
     const name = this.formName().trim();
     if (!name) {
       this.formError.set('Bitte einen Namen eingeben.');
@@ -165,20 +173,30 @@ export class MenuPage {
       return;
     }
 
-    const input = {
+    const input: DishInput = {
       category: this.formCategoryId(),
       name,
       zutaten: this.formZutaten().trim(),
       preis,
       imageUrl: this.formImageUrl() || undefined,
+      imageId: this.formImageId(),
     };
 
-    const current = this.editing();
-    if (typeof current === 'number') {
-      this.menu.update(current, input);
-    } else {
-      this.menu.add(input);
+    this.formError.set('');
+    this.saving.set(true);
+    try {
+      const editing = this.editingDish();
+      if (editing) {
+        await this.menu.update(editing, input);
+      } else {
+        await this.menu.add(input);
+      }
+    } catch {
+      this.formError.set('Speichern fehlgeschlagen. Läuft das Backend?');
+      this.saving.set(false);
+      return;
     }
+    this.saving.set(false);
 
     // Zur Kategorie des gespeicherten Gerichts wechseln, damit es sichtbar ist.
     const cat = this.categories.find((c) => c.id === input.category);
@@ -202,44 +220,26 @@ export class MenuPage {
       return;
     }
 
+    // Direkt zum Backend hochladen (dort: verkleinern, WebP, MinIO). Wir bekommen
+    // die gespeicherte Bild-ID + öffentliche URL zurück.
     this.formError.set('');
     this.imageLoading.set(true);
-    this.downscale(file)
-      .then((url) => {
+    this.menu
+      .uploadImage(file, this.formCategoryId())
+      .then(({ id, url }) => {
         this.formImageUrl.set(url);
+        this.formImageId.set(id);
         this.imageLoading.set(false);
       })
       .catch(() => {
-        this.formError.set('Foto konnte nicht geladen werden.');
+        this.formError.set('Foto konnte nicht hochgeladen werden.');
         this.imageLoading.set(false);
       });
   }
 
   removeImage(): void {
     this.formImageUrl.set('');
-  }
-
-  private downscale(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = () => reject();
-      reader.onload = () => {
-        const img = new Image();
-        img.onerror = () => reject();
-        img.onload = () => {
-          const scale = Math.min(1, MAX_IMAGE_SIZE / Math.max(img.width, img.height));
-          const canvas = document.createElement('canvas');
-          canvas.width = Math.round(img.width * scale);
-          canvas.height = Math.round(img.height * scale);
-          const ctx = canvas.getContext('2d');
-          if (!ctx) return reject();
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL('image/jpeg', 0.82));
-        };
-        img.src = reader.result as string;
-      };
-      reader.readAsDataURL(file);
-    });
+    this.formImageId.set(null);
   }
 
   // ─── Löschen ───────────────────────────────────────────────
@@ -251,10 +251,16 @@ export class MenuPage {
     this.deleting.set(null);
   }
 
-  confirmDelete(): void {
+  async confirmDelete(): Promise<void> {
     const dish = this.deleting();
-    if (dish) this.menu.remove(dish.id);
     this.deleting.set(null);
+    if (dish) {
+      try {
+        await this.menu.remove(dish);
+      } catch {
+        this.menu.error.set('Löschen fehlgeschlagen. Läuft das Backend?');
+      }
+    }
   }
 
   private resetForm(): void {
@@ -262,6 +268,7 @@ export class MenuPage {
     this.formZutaten.set('');
     this.formPreis.set('');
     this.formImageUrl.set('');
+    this.formImageId.set(null);
     this.formError.set('');
     this.imageLoading.set(false);
   }
