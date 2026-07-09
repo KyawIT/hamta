@@ -1,6 +1,6 @@
 package at.hamta.resource;
 
-import at.hamta.entity.Starter;
+import at.hamta.entity.Category;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -8,41 +8,41 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-@Path("/api/starters")
+@Path("/api/categories")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class StarterResource {
+public class CategoryResource {
 
     @GET
-    public List<Starter> getAll() {
-        return Starter.listAll();
+    public List<Category> getAll() {
+        return Category.listAll();
     }
 
     @GET
     @Path("/{id}")
-    public Starter getById(@PathParam("id") Long id) {
-        return Starter.findById(id);
+    public Response getById(@PathParam("id") Long id) {
+        Category category = Category.findById(id);
+        return category != null
+                ? Response.ok(category).build()
+                : Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @POST
     @Transactional
-    public Response create(Starter starter) {
-        starter.persist();
-        return Response.status(Response.Status.CREATED).entity(starter).build();
+    public Response create(Category category) {
+        category.persist();
+        return Response.status(Response.Status.CREATED).entity(category).build();
     }
 
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response update(@PathParam("id") Long id, Starter updated) {
-        Starter existing = Starter.findById(id);
+    public Response update(@PathParam("id") Long id, Category updated) {
+        Category existing = Category.findById(id);
         if (existing == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         existing.name = updated.name;
-        existing.image = updated.image;
-        existing.zutaten = updated.zutaten;
-        existing.preis = updated.preis;
         return Response.ok(existing).build();
     }
 
@@ -50,7 +50,7 @@ public class StarterResource {
     @Path("/{id}")
     @Transactional
     public Response delete(@PathParam("id") Long id) {
-        boolean deleted = Starter.deleteById(id);
+        boolean deleted = Category.deleteById(id);
         return deleted
                 ? Response.noContent().build()
                 : Response.status(Response.Status.NOT_FOUND).build();

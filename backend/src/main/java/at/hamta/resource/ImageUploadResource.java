@@ -1,6 +1,6 @@
 package at.hamta.resource;
 
-import at.hamta.entity.*;
+import at.hamta.entity.Image;
 import at.hamta.service.ImageService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -12,39 +12,53 @@ import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Set;
+import java.util.List;
 
 @Path("/api/images")
+@Produces(MediaType.APPLICATION_JSON)
 public class ImageUploadResource {
-
-    private static final Set<String> ALLOWED_CATEGORIES = Set.of(
-            "starter", "main-course", "dessert", "cocktail", "beverage"
-    );
 
     @Inject
     ImageService imageService;
 
     /**
-     * Lädt ein Bild hoch, speichert es in der image-Tabelle und
-     * verknüpft die image_id mit dem jeweiligen Eintrag.
+     * Returns all images (id + url).
+     * GET /api/images
+     */
+    @GET
+    public List<Image> getAll() {
+        return Image.listAll();
+    }
+
+    /**
+     * Returns a single image by id (id + url).
+     * GET /api/images/{id}
+     */
+    @GET
+    @Path("/{id}")
+    public Response getById(@PathParam("id") Long id) {
+        Image image = Image.findById(id);
+        return image != null
+                ? Response.ok(image).build()
+                : Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    /**
+     * Uploads an image to MinIO, resizes to max 1200px, converts to WebP,
+     * saves the public URL in the image table and returns id + url.
      *
-     * POST /api/images/upload/{category}/{id}
+     * POST /api/images/upload
+     * Form field: "file" (image file)
+     *
+     * Response: { "id": 1, "url": "http://minio-host/bucket/category/uuid.webp" }
      */
     @POST
-    @Path("/upload/{category}/{id}")
+    @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Response upload(
-            @PathParam("category") String category,
-            @PathParam("id") Long id,
+            @QueryParam("category") @DefaultValue("general") String category,
             @RestForm("file") FileUpload file) {
-
-        if (!ALLOWED_CATEGORIES.contains(category)) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"Invalid category. Allowed: starter, main-course, dessert, cocktail, beverage\"}")
-                    .build();
-        }
 
         if (file == null || file.size() == 0) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -68,55 +82,10 @@ public class ImageUploadResource {
                     .build();
         }
 
-        // Image-Datensatz anlegen
         Image image = new Image();
         image.url = imageUrl;
         image.persist();
 
-        // image_id verknüpfen
-        boolean found = linkImage(category, id, image);
-        if (!found) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"Entry not found\"}")
-                    .build();
-        }
-
-        return Response.ok("{\"imageId\": " + image.id + ", \"imageUrl\": \"" + imageUrl + "\"}").build();
-    }
-
-    private boolean linkImage(String category, Long id, Image image) {
-        return switch (category) {
-            case "starter" -> {
-                Starter entity = Starter.findById(id);
-                if (entity == null) yield false;
-                entity.image = image;
-                yield true;
-            }
-            case "main-course" -> {
-                MainCourse entity = MainCourse.findById(id);
-                if (entity == null) yield false;
-                entity.image = image;
-                yield true;
-            }
-            case "dessert" -> {
-                Dessert entity = Dessert.findById(id);
-                if (entity == null) yield false;
-                entity.image = image;
-                yield true;
-            }
-            case "cocktail" -> {
-                Cocktail entity = Cocktail.findById(id);
-                if (entity == null) yield false;
-                entity.image = image;
-                yield true;
-            }
-            case "beverage" -> {
-                Beverage entity = Beverage.findById(id);
-                if (entity == null) yield false;
-                entity.image = image;
-                yield true;
-            }
-            default -> false;
-        };
+        return Response.status(Response.Status.CREATED).entity(image).build();
     }
 }

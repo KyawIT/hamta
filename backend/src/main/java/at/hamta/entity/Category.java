@@ -6,11 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "image")
-public class Image extends PanacheEntity {
-
-    public String name;
+@Table(name = "category")
+public class Category extends PanacheEntity {
 
     @Column(nullable = false)
-    public String url;
+    public String name;
 }
