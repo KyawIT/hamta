@@ -16,7 +16,7 @@ services:
     image: quay.io/keycloak/keycloak:26.0
     container_name: keycloak
     restart: unless-stopped
-    command: start-dev
+    command: start-dev --import-realm
     environment:
       KEYCLOAK_ADMIN: ${KC_ADMIN_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
@@ -28,6 +28,8 @@ services:
       - "8081:8080"
     depends_on:
       - pep-db
+    volumes:
+      - ./hamta-realm.json:/opt/keycloak/data/import/hamta-realm.json:ro
   pep-minio:
     image: minio/minio:latest
     container_name: minio
