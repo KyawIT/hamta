@@ -3,7 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
 
-/** Schützt alle /admin-Seiten: ohne Anmeldung geht es zum Login-Screen. */
+/** Protects all /admin pages with a valid Keycloak session. */
 export const authGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);

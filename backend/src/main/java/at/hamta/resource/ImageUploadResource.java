@@ -11,8 +11,10 @@ import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 @Path("/api/images")
 @Produces(MediaType.APPLICATION_JSON)
@@ -62,30 +64,45 @@ public class ImageUploadResource {
 
         if (file == null || file.size() == 0) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"No file provided\"}")
+                    .entity(Map.of("error", "No file provided"))
+                    .build();
+        }
+        if (file.size() > ImageService.MAX_UPLOAD_BYTES) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", "Image file is too large. Maximum size is 10 MB"))
                     .build();
         }
 
-        String imageUrl;
+        ImageService.UploadedImage uploaded = null;
         try {
-            imageUrl = imageService.uploadImage(
-                    Files.newInputStream(file.uploadedFile()),
-                    category
-            );
+            try (InputStream input = Files.newInputStream(file.uploadedFile())) {
+                uploaded = imageService.uploadImage(input, category);
+            }
+
+            Image image = new Image();
+            image.url = uploaded.url();
+            image.persist();
+
+            return Response.status(Response.Status.CREATED).entity(image).build();
+        } catch (ImageService.InvalidImageException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", e.getMessage()))
+                    .build();
         } catch (IOException e) {
             return Response.serverError()
-                    .entity("{\"error\": \"Error reading file: " + e.getMessage() + "\"}")
+                    .entity(Map.of("error", "Error processing image"))
                     .build();
         } catch (Exception e) {
+            if (uploaded != null) {
+                try {
+                    imageService.deleteImage(uploaded.key());
+                } catch (Exception ignored) {
+                    // Preserve the original error response.
+                }
+            }
             return Response.serverError()
-                    .entity("{\"error\": \"Error processing image: " + e.getMessage() + "\"}")
+                    .entity(Map.of("error", "Error processing image"))
                     .build();
         }
-
-        Image image = new Image();
-        image.url = imageUrl;
-        image.persist();
-
-        return Response.status(Response.Status.CREATED).entity(image).build();
     }
 }

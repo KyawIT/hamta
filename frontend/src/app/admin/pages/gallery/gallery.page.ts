@@ -10,8 +10,11 @@ import {
   LucideUpload,
 } from '@lucide/angular';
 
-import { downscaleImage } from '../../../shared/downscale-image';
 import { GalleryImage, GalleryService, MAX_GALLERY_IMAGES } from '../../gallery/gallery.service';
+import {
+  IMAGE_UPLOAD_ACCEPT,
+  validateUploadImage,
+} from '../../../shared/image-upload-validation';
 
 @Component({
   selector: 'app-admin-gallery',
@@ -36,12 +39,14 @@ export class GalleryPage {
   readonly images = this.gallery.images;
   readonly count = this.gallery.count;
   readonly isFull = this.gallery.isFull;
+  readonly imageAccept = IMAGE_UPLOAD_ACCEPT;
 
   readonly uploading = signal(false);
   readonly error = signal('');
+  readonly loadError = this.gallery.error;
 
-  // Ausstehender Upload: Bild ist verkleinert und wartet auf einen Namen.
-  readonly pendingImage = signal<string | null>(null);
+  // Ausstehender Upload: Bild liegt bereits im Backend und wartet auf einen Namen.
+  readonly pendingImage = signal<{ id: number; url: string } | null>(null);
   readonly pendingName = signal('');
 
   readonly deleting = signal<GalleryImage | null>(null);
@@ -52,8 +57,9 @@ export class GalleryPage {
     input.value = '';
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      this.error.set('Bitte eine Bilddatei auswählen.');
+    const validationError = await validateUploadImage(file);
+    if (validationError) {
+      this.error.set(validationError);
       return;
     }
     if (this.gallery.isFull()) {
@@ -64,22 +70,29 @@ export class GalleryPage {
     this.error.set('');
     this.uploading.set(true);
     try {
-      const url = await downscaleImage(file);
+      const image = await this.gallery.uploadImage(file);
       this.pendingName.set('');
-      this.pendingImage.set(url);
+      this.pendingImage.set(image);
     } catch {
-      this.error.set('Foto konnte nicht geladen werden.');
+      this.error.set('Foto konnte nicht hochgeladen werden.');
     } finally {
       this.uploading.set(false);
     }
   }
 
-  confirmUpload(): void {
-    const url = this.pendingImage();
-    if (!url) return;
-    this.gallery.add(url, this.pendingName().trim());
-    this.pendingImage.set(null);
-    this.pendingName.set('');
+  async confirmUpload(): Promise<void> {
+    const image = this.pendingImage();
+    if (!image) return;
+    this.uploading.set(true);
+    try {
+      await this.gallery.add(image, this.pendingName().trim());
+      this.pendingImage.set(null);
+      this.pendingName.set('');
+    } catch {
+      this.error.set('Speichern fehlgeschlagen. Läuft das Backend?');
+    } finally {
+      this.uploading.set(false);
+    }
   }
 
   cancelUpload(): void {
@@ -92,7 +105,7 @@ export class GalleryPage {
   }
 
   move(id: number, direction: -1 | 1): void {
-    this.gallery.move(id, direction);
+    void this.gallery.move(id, direction);
   }
 
   askDelete(image: GalleryImage): void {
@@ -103,9 +116,9 @@ export class GalleryPage {
     this.deleting.set(null);
   }
 
-  confirmDelete(): void {
+  async confirmDelete(): Promise<void> {
     const image = this.deleting();
-    if (image) this.gallery.remove(image.id);
     this.deleting.set(null);
+    if (image) await this.gallery.remove(image.id);
   }
 }

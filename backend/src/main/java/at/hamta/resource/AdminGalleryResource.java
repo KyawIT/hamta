@@ -32,32 +32,32 @@ public class AdminGalleryResource {
     @PUT
     @Transactional
     public Response updateGallery(GalleryUpdateRequest request) {
-        if (request == null || request.imageIds == null) {
+        if (request == null || request.images == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"imageIds must not be null\"}")
+                    .entity("{\"error\": \"images must not be null\"}")
                     .build();
         }
-        if (request.imageIds.size() > 10) {
+        if (request.images.size() > 10) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("{\"error\": \"Gallery may contain at most 10 slots\"}")
                     .build();
         }
 
         Set<Long> seen = new HashSet<>();
-        for (Long id : request.imageIds) {
-            if (id == null) continue;
-            if (!seen.add(id)) {
+        for (GalleryUpdateRequest.Entry entry : request.images) {
+            if (entry.imageId == null) continue;
+            if (!seen.add(entry.imageId)) {
                 return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("{\"error\": \"Duplicate imageId: " + id + "\"}")
+                        .entity("{\"error\": \"Duplicate imageId: " + entry.imageId + "\"}")
                         .build();
             }
         }
 
-        for (Long id : request.imageIds) {
-            if (id == null) continue;
-            if (Image.findById(id) == null) {
+        for (GalleryUpdateRequest.Entry entry : request.images) {
+            if (entry.imageId == null) continue;
+            if (Image.findById(entry.imageId) == null) {
                 return Response.status(Response.Status.NOT_FOUND)
-                        .entity("{\"error\": \"Image not found: " + id + "\"}")
+                        .entity("{\"error\": \"Image not found: " + entry.imageId + "\"}")
                         .build();
             }
         }
@@ -65,15 +65,16 @@ public class AdminGalleryResource {
         GalleryImage.deleteAll();
 
         List<GalleryImageDto> result = new ArrayList<>();
-        for (int i = 0; i < request.imageIds.size(); i++) {
-            Long id = request.imageIds.get(i);
-            if (id == null) continue;
-            Image image = Image.findById(id);
-            GalleryImage entry = new GalleryImage();
-            entry.image    = image;
-            entry.position = i;
-            entry.persist();
-            result.add(new GalleryImageDto(image.id, image.url, i, null));
+        for (int i = 0; i < request.images.size(); i++) {
+            GalleryUpdateRequest.Entry entry = request.images.get(i);
+            if (entry.imageId == null) continue;
+            Image image = Image.findById(entry.imageId);
+            GalleryImage galleryImage = new GalleryImage();
+            galleryImage.image    = image;
+            galleryImage.position = i;
+            galleryImage.caption  = entry.caption;
+            galleryImage.persist();
+            result.add(new GalleryImageDto(image.id, image.url, i, galleryImage.caption));
         }
 
         return Response.ok(result).build();

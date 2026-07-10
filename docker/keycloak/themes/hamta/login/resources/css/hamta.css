@@ -1,0 +1,210 @@
+:root {
+  --hamta-gold: #c9862f;
+  --hamta-gold-light: #dfa254;
+  --hamta-ink: #0e0e0e;
+  --hamta-surface: #1e1e1e;
+  --hamta-text: #e5e2e1;
+  --hamta-muted: #aaa199;
+}
+
+body,
+body.login-pf {
+  min-height: 100vh;
+  color: var(--hamta-text);
+  font-family: Manrope, Arial, sans-serif;
+  background:
+    radial-gradient(circle at 15% 8%, rgba(201, 134, 47, 0.16), transparent 28rem),
+    radial-gradient(circle at 88% 92%, rgba(201, 134, 47, 0.08), transparent 24rem),
+    linear-gradient(135deg, #0b0b0b, #181715 52%, #0c0c0c) !important;
+}
+
+#kc-header {
+  margin: 0;
+  padding: 0;
+}
+
+#kc-header-wrapper {
+  padding: 0;
+  color: var(--hamta-text);
+  text-align: center;
+}
+
+.login-pf-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem 1.25rem;
+}
+
+.card-pf {
+  width: min(100%, 29rem);
+  margin: 1.25rem auto 0;
+  padding: 2.5rem;
+  border: 1px solid rgba(201, 134, 47, 0.28);
+  border-radius: 0.125rem;
+  background: linear-gradient(145deg, rgba(35, 34, 32, 0.98), rgba(16, 16, 16, 0.98));
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.55), inset 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.hamta-wordmark,
+.hamta-submark {
+  display: block;
+}
+
+.hamta-wordmark {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--hamta-gold-light);
+}
+
+.hamta-submark,
+.hamta-eyebrow {
+  margin-top: 0.55rem;
+  color: var(--hamta-muted);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+}
+
+.hamta-login-intro {
+  margin-bottom: 1.8rem;
+}
+
+.hamta-login-intro h1 {
+  margin: 0.7rem 0 0.6rem;
+  color: var(--hamta-text);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.85rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.hamta-login-intro p,
+.hamta-help {
+  margin: 0;
+  color: var(--hamta-muted);
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+
+.hamta-login-form {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.hamta-field {
+  display: grid;
+  gap: 0.48rem;
+}
+
+.hamta-label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.hamta-field label {
+  color: var(--hamta-text);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.hamta-label-row a {
+  color: var(--hamta-gold-light);
+  font-size: 0.72rem;
+  text-decoration: none;
+}
+
+.hamta-label-row a:hover {
+  color: #f1c27d;
+  text-decoration: underline;
+}
+
+.hamta-field input[type='text'],
+.hamta-field input[type='password'] {
+  width: 100%;
+  height: 2.85rem;
+  padding: 0 0.85rem;
+  border: 1px solid #4b4742;
+  border-radius: 0.125rem;
+  outline: none;
+  color: var(--hamta-text);
+  font: inherit;
+  background: #111;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.hamta-field input:focus {
+  border-color: var(--hamta-gold);
+  box-shadow: 0 0 0 3px rgba(201, 134, 47, 0.18);
+}
+
+.hamta-remember {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--hamta-muted);
+  font-size: 0.77rem;
+}
+
+.hamta-remember input {
+  accent-color: var(--hamta-gold);
+}
+
+.hamta-submit {
+  width: 100%;
+  min-height: 2.95rem;
+  margin-top: 0.45rem;
+  border: 0;
+  border-radius: 0.125rem;
+  cursor: pointer;
+  color: #17110b;
+  font: 700 0.75rem Manrope, Arial, sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #dfa254, #c9862f 56%, #ad6a25);
+  transition: filter 150ms ease, transform 150ms ease;
+}
+
+.hamta-submit:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.hamta-submit:focus-visible {
+  outline: 3px solid rgba(241, 194, 125, 0.7);
+  outline-offset: 3px;
+}
+
+.hamta-field-error,
+#input-error {
+  color: #f09b8d;
+  font-size: 0.75rem;
+}
+
+#kc-content-wrapper {
+  color: var(--hamta-muted);
+}
+
+.alert {
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(240, 155, 141, 0.45);
+  border-radius: 0.125rem;
+  color: #f3c0b7;
+  background: rgba(127, 40, 30, 0.22);
+}
+
+@media (max-width: 520px) {
+  .login-pf-page {
+    padding: 1.25rem 0.85rem;
+  }
+
+  .card-pf {
+    padding: 1.8rem 1.35rem;
+  }
+}

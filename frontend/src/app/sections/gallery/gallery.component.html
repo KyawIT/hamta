@@ -1,6 +1,12 @@
 <section id="galerie" class="py-24 lg:py-36 bg-[#151413]"><div class="max-w-7xl mx-auto px-5 lg:px-10">
   <div appFadeIn class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 lg:mb-16"><div><app-section-label class="block mb-5">Galerie</app-section-label><h2 class="text-4xl lg:text-6xl text-[#eee7df]">Ein Blick an<br/><em class="italic font-normal text-[#d89a4b]">unseren Tisch</em></h2></div></div>
-  <div class="gap-2.5 lg:gap-4" [class]="columnClass">
-    @for (image of images; track image.src; let i = $index) { <figure appFadeIn [fadeDelay]="i * 45" class="gallery-card img-zoom relative overflow-hidden group rounded-sm mb-2.5 lg:mb-4 break-inside-avoid"><img [src]="image.src" [alt]="image.alt" loading="lazy" class="w-full h-auto transition-all duration-700 group-hover:scale-105 group-hover:brightness-75"/><figcaption class="absolute inset-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-300 flex items-end p-4 [background:linear-gradient(to_top,rgba(14,14,14,.88)_0%,transparent_68%)]"><span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-[#e3a657]">{{ image.alt }}</span></figcaption></figure> }
-  </div>
+  @if (images().length > 0) {
+    <div class="gap-2.5 lg:gap-4" [class]="columnClass()">
+      @for (image of images(); track image.src; let i = $index) { <figure appFadeIn [fadeDelay]="i * 45" class="gallery-card img-zoom relative overflow-hidden group rounded-sm mb-2.5 lg:mb-4 break-inside-avoid"><img [src]="image.src" [alt]="image.alt" loading="lazy" class="w-full h-auto transition-all duration-700 group-hover:scale-105 group-hover:brightness-75"/><figcaption class="absolute inset-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-300 flex items-end p-4 [background:linear-gradient(to_top,rgba(14,14,14,.88)_0%,transparent_68%)]"><span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-[#e3a657]">{{ image.alt }}</span></figcaption></figure> }
+    </div>
+  } @else {
+    <p appFadeIn class="text-sm leading-7 text-[#aaa199]">
+      Unsere Galerie wird gerade befüllt – schauen Sie bald wieder vorbei.
+    </p>
+  }
 </div></section>
