@@ -12,42 +12,12 @@
       <span>Geschützter Bereich</span>
     </div>
 
-    <form class="login__form" (ngSubmit)="submit()">
-      <div>
-        <label class="form-label" for="login-user">Benutzername</label>
-        <input
-          id="login-user"
-          class="form-control"
-          type="text"
-          autocomplete="username"
-          placeholder="admin"
-          [ngModel]="username()"
-          (ngModelChange)="username.set($event)"
-          name="username"
-          [disabled]="submitting()"
-        />
-      </div>
-
-      <div>
-        <label class="form-label" for="login-pass">Passwort</label>
-        <input
-          id="login-pass"
-          class="form-control"
-          type="password"
-          autocomplete="current-password"
-          placeholder="••••••••"
-          [ngModel]="password()"
-          (ngModelChange)="password.set($event)"
-          name="password"
-          [disabled]="submitting()"
-        />
-      </div>
-
+    <div class="login__form">
       @if (error()) {
         <p class="login__error">{{ error() }}</p>
       }
 
-      <button class="btn-gold login__submit" type="submit" [disabled]="submitting()">
+      <button class="btn-gold login__submit" type="button" (click)="login()" [disabled]="submitting()">
         @if (submitting()) {
           <svg lucideLoaderCircle [size]="15" class="login__spin"></svg>
           Anmelden…
@@ -55,7 +25,7 @@
           Anmelden
         }
       </button>
-    </form>
+    </div>
 
     <a class="login__back" href="/">← Zurück zur Website</a>
   </div>

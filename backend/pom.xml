@@ -89,13 +89,6 @@
             <version>0.4.20</version>
         </dependency>
 
-        <!-- WebP-Encoding via ImageIO-Plugin (bundled native libs für Linux x64/macOS/Win) -->
-        <dependency>
-            <groupId>org.sejda.imageio</groupId>
-            <artifactId>webp-imageio</artifactId>
-            <version>0.1.6</version>
-        </dependency>
-
         <!-- AWS SDK v2 S3-Client (kompatibel mit MinIO via pathStyleAccess) -->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>

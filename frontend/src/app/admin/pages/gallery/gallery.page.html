@@ -23,7 +23,11 @@
   Pfeile anpassen – das erste Bild ist das Titelbild. Maximal {{ max }} Bilder.
 </p>
 
-<input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
+<input #fileInput type="file" [accept]="imageAccept" hidden (change)="onFileSelected($event)" />
+
+@if (loadError()) {
+  <p class="error" role="alert">{{ loadError() }}</p>
+}
 
 @if (error()) {
   <p class="error">{{ error() }}</p>
@@ -31,7 +35,7 @@
 
 <!-- ─── Grid ───────────────────────────────────────────────── -->
 @if (count() === 0) {
-  <button type="button" class="empty" (click)="fileInput.click()">
+  <button type="button" class="empty" [disabled]="uploading()" (click)="fileInput.click()">
     <svg lucideImagePlus [size]="30"></svg>
     <span class="empty__title">Noch keine Bilder</span>
     <span class="empty__hint">Tippe hier, um Fotos vom Gerät hochzuladen</span>
@@ -98,7 +102,7 @@
 }
 
 <!-- ─── Namens-Dialog beim Hochladen ───────────────────────── -->
-@if (pendingImage(); as url) {
+@if (pendingImage(); as image) {
   <div class="modal">
     <div class="modal__scrim" (click)="cancelUpload()"></div>
     <div class="modal__card modal__card--upload" role="dialog" aria-modal="true">
@@ -106,7 +110,7 @@
       <h2 class="modal__title font-serif">Bild benennen</h2>
 
       <div class="upload-preview">
-        <img [src]="url" alt="Vorschau" />
+        <img [src]="image.url" alt="Vorschau" />
       </div>
 
       <div class="upload-field">
@@ -123,8 +127,12 @@
       </div>
 
       <div class="modal__foot">
-        <button type="button" class="btn-outline" (click)="cancelUpload()">Abbrechen</button>
-        <button type="button" class="btn-gold" (click)="confirmUpload()">Hinzufügen</button>
+        <button type="button" class="btn-outline" (click)="cancelUpload()" [disabled]="uploading()">
+          Abbrechen
+        </button>
+        <button type="button" class="btn-gold" (click)="confirmUpload()" [disabled]="uploading()">
+          {{ uploading() ? 'Speichert…' : 'Hinzufügen' }}
+        </button>
       </div>
     </div>
   </div>

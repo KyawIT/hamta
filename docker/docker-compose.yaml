@@ -1,6 +1,6 @@
 name: hamta
 services:
-  pep-db:
+  hmt-db:
     image: postgres:16
     container_name: postgres
     restart: unless-stopped
@@ -9,10 +9,10 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  pep-keycloak:
+  hmt-keycloak:
     image: quay.io/keycloak/keycloak:26.0
     container_name: keycloak
     restart: unless-stopped
@@ -26,9 +26,11 @@ services:
       KC_DB_PASSWORD: ${DB_PASSWORD}
     ports:
       - "8081:8080"
+    volumes:
+      - ./keycloak/themes:/opt/keycloak/themes:ro
     depends_on:
-      - pep-db
-  pep-minio:
+      - hmt-db
+  hmt-minio:
     image: minio/minio:latest
     container_name: minio
     restart: unless-stopped
@@ -37,11 +39,11 @@ services:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     ports:
-      - "9010:9000"
-      - "9011:9001"
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - minio_data:/data
-  pep-minio-init:
+  hmt-minio-init:
     image: minio/mc:latest
     container_name: minio-init
     restart: "no"
@@ -50,7 +52,7 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
       MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
     depends_on:
-      - pep-minio
+      - hmt-minio
     entrypoint: >
       /bin/sh -c "
       until mc alias set myminio http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD}; do

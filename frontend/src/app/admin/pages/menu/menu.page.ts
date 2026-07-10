@@ -15,12 +15,15 @@ import { MenuAdminService } from '../../menu/menu-admin.service';
 import {
   CATEGORIES,
   CATEGORY_GROUPS,
-  Category,
   CategoryGroup,
   CategoryId,
   Dish,
   DishInput,
 } from '../../menu/menu.model';
+import {
+  IMAGE_UPLOAD_ACCEPT,
+  validateUploadImage,
+} from '../../../shared/image-upload-validation';
 
 @Component({
   selector: 'app-admin-menu',
@@ -38,6 +41,9 @@ import {
   templateUrl: './menu.page.html',
   styleUrl: './menu.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:keydown.escape)': 'onEscape()',
+  },
 })
 export class MenuPage {
   private readonly menu = inject(MenuAdminService);
@@ -58,6 +64,16 @@ export class MenuPage {
 
   readonly isSearching = computed(() => this.search().trim().length > 0);
 
+  /** „Gericht" oder „Getränk", passend zur aktiven Gruppe (Listenansicht). */
+  readonly noun = computed(() => (this.group() === 'speisen' ? 'Gericht' : 'Getränk'));
+
+  readonly dishCount = computed(
+    () => this.menu.dishes().filter((d) => this.groupOf(d.category) === 'speisen').length,
+  );
+  readonly drinkCount = computed(
+    () => this.menu.dishes().filter((d) => this.groupOf(d.category) === 'getraenke').length,
+  );
+
   /** Angezeigte Gerichte: bei Suche kategorieübergreifend, sonst nach aktiver Kategorie. */
   readonly results = computed<Dish[]>(() => {
     const term = this.search().trim().toLowerCase();
@@ -71,8 +87,6 @@ export class MenuPage {
     return this.menu.dishes().filter((d) => d.category === this.activeId());
   });
 
-  readonly totalCount = computed(() => this.menu.dishes().length);
-
   // ─── Formular-Zustand ──────────────────────────────────────
   readonly editing = signal<number | 'new' | null>(null);
   /** Das gerade bearbeitete Gericht (für korrektes Endpoint-Routing beim Speichern). */
@@ -85,12 +99,24 @@ export class MenuPage {
   readonly formImageId = signal<number | null>(null);
   readonly formError = signal('');
   readonly imageLoading = signal(false);
+  readonly imageAccept = IMAGE_UPLOAD_ACCEPT;
   readonly saving = signal(false);
 
   /** Ladefehler beim Abruf der Speisekarte (vom Service). */
   readonly loadError = this.menu.error;
 
   readonly isEditing = computed(() => typeof this.editing() === 'number');
+
+  /** Gruppe der im Formular gewählten Kategorie (steuert Wortlaut + Chips). */
+  readonly formGroup = computed(() => this.groupOf(this.formCategoryId()));
+  /** „Gericht" oder „Getränk", passend zur Formular-Kategorie. */
+  readonly formNoun = computed(() => (this.formGroup() === 'speisen' ? 'Gericht' : 'Getränk'));
+  readonly formCategories = computed(() =>
+    this.categories.filter((c) => c.group === this.formGroup()),
+  );
+
+  /** Datei wird gerade über die Upload-Fläche gezogen. */
+  readonly dragOver = signal(false);
 
   /** Live-Vorschau des Gerichts, während man tippt. */
   readonly preview = computed<Dish>(() => ({
@@ -123,8 +149,12 @@ export class MenuPage {
     return this.categories.find((c) => c.id === id)?.label ?? id;
   }
 
-  categoriesOf(group: CategoryGroup): Category[] {
-    return this.categories.filter((c) => c.group === group);
+  groupOf(id: CategoryId): CategoryGroup {
+    return this.categories.find((c) => c.id === id)?.group ?? 'speisen';
+  }
+
+  nounFor(dish: Dish): string {
+    return this.groupOf(dish.category) === 'speisen' ? 'Gericht' : 'Getränk';
   }
 
   formatPrice(preis: number | null): string {
@@ -141,6 +171,25 @@ export class MenuPage {
     this.editingDish.set(null);
     this.formCategoryId.set(this.activeId());
     this.editing.set('new');
+    // Direkt lostippen können: Name-Feld fokussieren, sobald das Modal steht.
+    setTimeout(() => document.getElementById('f-name')?.focus());
+  }
+
+  selectFormGroup(group: CategoryGroup): void {
+    if (this.formGroup() === group) return;
+    this.formCategoryId.set(this.categories.find((c) => c.group === group)!.id);
+  }
+
+  selectFormCategory(id: CategoryId): void {
+    this.formCategoryId.set(id);
+  }
+
+  onEscape(): void {
+    if (this.deleting()) {
+      this.cancelDelete();
+    } else if (this.editing() !== null && !this.saving()) {
+      this.closeForm();
+    }
   }
 
   openEdit(dish: Dish): void {
@@ -213,10 +262,29 @@ export class MenuPage {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     input.value = '';
-    if (!file) return;
+    if (file) void this.uploadFile(file);
+  }
 
-    if (!file.type.startsWith('image/')) {
-      this.formError.set('Bitte eine Bilddatei auswählen.');
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    this.dragOver.set(true);
+  }
+
+  onDragLeave(): void {
+    this.dragOver.set(false);
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.dragOver.set(false);
+    const file = event.dataTransfer?.files?.[0];
+    if (file) void this.uploadFile(file);
+  }
+
+  private async uploadFile(file: File): Promise<void> {
+    const validationError = await validateUploadImage(file);
+    if (validationError) {
+      this.formError.set(validationError);
       return;
     }
 
@@ -224,17 +292,15 @@ export class MenuPage {
     // die gespeicherte Bild-ID + öffentliche URL zurück.
     this.formError.set('');
     this.imageLoading.set(true);
-    this.menu
-      .uploadImage(file, this.formCategoryId())
-      .then(({ id, url }) => {
-        this.formImageUrl.set(url);
-        this.formImageId.set(id);
-        this.imageLoading.set(false);
-      })
-      .catch(() => {
-        this.formError.set('Foto konnte nicht hochgeladen werden.');
-        this.imageLoading.set(false);
-      });
+    try {
+      const { id, url } = await this.menu.uploadImage(file, this.formCategoryId());
+      this.formImageUrl.set(url);
+      this.formImageId.set(id);
+    } catch {
+      this.formError.set('Foto konnte nicht hochgeladen werden.');
+    } finally {
+      this.imageLoading.set(false);
+    }
   }
 
   removeImage(): void {
@@ -271,6 +337,7 @@ export class MenuPage {
     this.formImageId.set(null);
     this.formError.set('');
     this.imageLoading.set(false);
+    this.dragOver.set(false);
   }
 
   private parsePreis(raw: string): number | null | 'invalid' {

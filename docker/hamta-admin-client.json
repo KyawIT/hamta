@@ -1,0 +1,40 @@
+{
+  "clientId": "hamta-admin",
+  "name": "Hamta Admin Frontend",
+  "description": "Browser client for the Angular admin application.",
+  "enabled": true,
+  "protocol": "openid-connect",
+  "publicClient": true,
+  "clientAuthenticatorType": "client-secret",
+  "standardFlowEnabled": true,
+  "implicitFlowEnabled": false,
+  "directAccessGrantsEnabled": false,
+  "serviceAccountsEnabled": false,
+  "redirectUris": [
+    "http://localhost:4200/admin/login",
+    "http://localhost:8080/admin/login"
+  ],
+  "webOrigins": [
+    "http://localhost:4200",
+    "http://localhost:8080"
+  ],
+  "attributes": {
+    "pkce.code.challenge.method": "S256",
+    "post.logout.redirect.uris": "+"
+  },
+  "defaultClientScopes": [
+    "web-origins",
+    "acr",
+    "roles",
+    "profile",
+    "basic",
+    "email"
+  ],
+  "optionalClientScopes": [
+    "address",
+    "phone",
+    "offline_access",
+    "organization",
+    "microprofile-jwt"
+  ]
+}
