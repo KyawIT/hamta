@@ -24,7 +24,7 @@ public class AdminGalleryResource {
         List<GalleryImage> entries = GalleryImage.findOrdered();
         List<GalleryImageDto> result = new ArrayList<>();
         for (GalleryImage entry : entries) {
-            result.add(new GalleryImageDto(entry.image.id, entry.image.url, entry.position));
+            result.add(new GalleryImageDto(entry.image.id, entry.image.url, entry.position, entry.caption));
         }
         return result;
     }
@@ -73,7 +73,7 @@ public class AdminGalleryResource {
             entry.image    = image;
             entry.position = i;
             entry.persist();
-            result.add(new GalleryImageDto(image.id, image.url, i));
+            result.add(new GalleryImageDto(image.id, image.url, i, null));
         }
 
         return Response.ok(result).build();

@@ -1,0 +1,1 @@
+ALTER TABLE gallery_image ADD COLUMN IF NOT EXISTS caption VARCHAR(500);

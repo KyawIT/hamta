@@ -19,7 +19,7 @@ public class GalleryResource {
         List<GalleryImage> entries = GalleryImage.findOrdered();
         List<GalleryImageDto> result = new ArrayList<>();
         for (GalleryImage entry : entries) {
-            result.add(new GalleryImageDto(entry.image.id, entry.image.url, entry.position));
+            result.add(new GalleryImageDto(entry.image.id, entry.image.url, entry.position, entry.caption));
         }
         return result;
     }

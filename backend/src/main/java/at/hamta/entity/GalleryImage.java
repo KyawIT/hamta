@@ -16,6 +16,8 @@ public class GalleryImage extends PanacheEntity {
     @Column(nullable = false, unique = true)
     public int position;
 
+    public String caption;
+
     public static List<GalleryImage> findOrdered() {
         return list("ORDER BY position ASC");
     }

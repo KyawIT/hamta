@@ -4,10 +4,12 @@ public class GalleryImageDto {
     public Long imageId;
     public String url;
     public int position;
+    public String caption;
 
-    public GalleryImageDto(Long imageId, String url, int position) {
+    public GalleryImageDto(Long imageId, String url, int position, String caption) {
         this.imageId  = imageId;
         this.url      = url;
         this.position = position;
+        this.caption  = caption;
     }
 }
