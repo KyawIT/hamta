@@ -9,7 +9,7 @@ Das Projekt besteht aus vier Teilen:
 | **Frontend** | Angular 21, Tailwind CSS 4 | Öffentliche Website + Adminbereich |
 | **Backend** | Quarkus (Java), Hibernate Panache | REST-API für die Speisekarte |
 | **Datenbank** | PostgreSQL 16 | Persistenz |
-| **Auth** | Keycloak 26 | Anmeldung / Rollen (noch nicht verdrahtet) |
+| **Auth** | Keycloak 26 + Quarkus OIDC | Admin-Anmeldung und Bearer-Token-Prüfung |
 | **Storage** | MinIO (S3-kompatibel) | Bild-Uploads |
 
 ## Frontend
@@ -74,11 +74,13 @@ als Quelle der Wahrheit. Siehe [roadmap.md](roadmap.md).
 
 ## Sicherheit (Status)
 
-- Keycloak läuft im docker-compose, OIDC ist im Backend für `%dev` **konfiguriert**
-  (`http://localhost:8081/realms/hamta`, Client `backend`).
-- **Aber:** Der Realm `hamta` muss in Keycloak noch angelegt werden, und die Endpoints haben
-  **kein** `@RolesAllowed` → **die API ist aktuell offen.**
-- Frontend-Login ist ein Platzhalter (`AuthService`), 1:1 gegen Keycloak austauschbar.
+- Keycloak läuft im docker-compose. Quarkus validiert Bearer-Tokens über den Realm `hamta`;
+  Server-URL und Client-ID können mit `OIDC_AUTH_SERVER_URL` und `OIDC_CLIENT_ID` gesetzt werden.
+- Öffentliche Lesezugriffe auf Speisekarte, Kategorien und Galerie bleiben anonym erreichbar.
+- Änderungen an Speisen, Getränken und Kategorien sowie Admin-Galerie, Bildverwaltung, Upload und
+  MinIO-Sync erfordern einen gültigen Keycloak Access Token.
+- Der Angular-Admin nutzt Authorization Code + PKCE und sendet das Access Token bei `/api`-Aufrufen
+  als `Authorization: Bearer …` mit.
 
 ## Was es noch NICHT gibt
 

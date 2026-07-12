@@ -3,6 +3,7 @@ package at.hamta.resource;
 import at.hamta.entity.Category;
 import at.hamta.entity.Dish;
 import at.hamta.entity.Image;
+import io.quarkus.security.Authenticated;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -33,6 +34,7 @@ public class DishResource {
     }
 
     @POST
+    @Authenticated
     @Transactional
     public Response create(Dish dish) {
         dish.category = resolveCategory(dish.category);
@@ -43,6 +45,7 @@ public class DishResource {
 
     @PUT
     @Path("/{id}")
+    @Authenticated
     @Transactional
     public Response update(@PathParam("id") Long id, Dish updated) {
         Dish existing = Dish.findById(id);
@@ -59,6 +62,7 @@ public class DishResource {
 
     @DELETE
     @Path("/{id}")
+    @Authenticated
     @Transactional
     public Response delete(@PathParam("id") Long id) {
         boolean deleted = Dish.deleteById(id);

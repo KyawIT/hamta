@@ -4,6 +4,7 @@ import at.hamta.dto.GalleryImageDto;
 import at.hamta.dto.GalleryUpdateRequest;
 import at.hamta.entity.GalleryImage;
 import at.hamta.entity.Image;
+import io.quarkus.security.Authenticated;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Path("/api/admin/gallery")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Authenticated
 public class AdminGalleryResource {
 
     @GET

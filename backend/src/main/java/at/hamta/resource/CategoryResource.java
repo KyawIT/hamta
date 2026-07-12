@@ -1,6 +1,7 @@
 package at.hamta.resource;
 
 import at.hamta.entity.Category;
+import io.quarkus.security.Authenticated;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -28,6 +29,7 @@ public class CategoryResource {
     }
 
     @POST
+    @Authenticated
     @Transactional
     public Response create(Category category) {
         category.persist();
@@ -36,6 +38,7 @@ public class CategoryResource {
 
     @PUT
     @Path("/{id}")
+    @Authenticated
     @Transactional
     public Response update(@PathParam("id") Long id, Category updated) {
         Category existing = Category.findById(id);
@@ -48,6 +51,7 @@ public class CategoryResource {
 
     @DELETE
     @Path("/{id}")
+    @Authenticated
     @Transactional
     public Response delete(@PathParam("id") Long id) {
         boolean deleted = Category.deleteById(id);

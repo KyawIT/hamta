@@ -2,6 +2,7 @@ package at.hamta.resource;
 
 import at.hamta.entity.Image;
 import at.hamta.service.ImageService;
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 @Path("/api/images")
 @Produces(MediaType.APPLICATION_JSON)
+@Authenticated
 public class ImageUploadResource {
 
     @Inject

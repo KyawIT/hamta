@@ -36,7 +36,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4" aria-live="polite">
-      @for (item of active()?.items; track item.name; let i = $index) {
+      @for (item of active().items; track item.name; let i = $index) {
         <div appFadeIn [fadeDelay]="i * 55" class="menu-card flex items-start justify-between gap-5 rounded-sm p-5 sm:p-6">
           <div class="flex-1 min-w-0"><div class="flex flex-wrap items-center gap-2 mb-2"><h3 class="text-lg font-medium font-serif" [class.text-[#d89a4b]]="item.highlight" [class.text-[#eee7df]]="!item.highlight">{{ item.name }}</h3>@if (item.highlight) { <span class="text-[9px] font-semibold uppercase tracking-widest px-2 py-1 bg-[rgba(201,134,47,.12)] text-[#d89a4b] rounded-full">Empfehlung</span> }</div><p class="text-sm leading-relaxed text-[#aaa199]">{{ item.description }}</p></div>
           <span class="text-base font-semibold shrink-0 font-serif text-[#d89a4b] min-w-16 text-right">{{ item.price }}</span>

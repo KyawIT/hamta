@@ -28,6 +28,12 @@ export class AuthService {
     return this.hasValidStoredTokens();
   }
 
+  /** Returns the current bearer token for backend API calls, if it is still valid. */
+  accessToken(): string | null {
+    const tokens = this.readTokens();
+    return tokens && tokens.expires_at > Date.now() ? tokens.access_token : null;
+  }
+
   /** Redirects to Keycloak; credentials are entered only on Keycloak's hosted login page. */
   login(): void {
     if (!this.isBrowser) return;

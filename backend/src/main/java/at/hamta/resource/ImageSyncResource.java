@@ -1,6 +1,7 @@
 package at.hamta.resource;
 
 import at.hamta.entity.Image;
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.POST;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/api/images/sync")
+@Authenticated
 public class ImageSyncResource {
 
     @Inject

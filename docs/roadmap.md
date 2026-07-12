@@ -43,7 +43,7 @@ Diese Punkte sollten **im Team** geklärt werden, bevor weitergebaut wird:
 - [ ] Seed als eine Flyway-Migration (Team-Entscheidung #2)
 - [ ] Reservierungs-Entity + Endpoints
 - [ ] Öffnungszeiten/Settings-Entity + Endpoints
-- [ ] Endpoints mit Keycloak absichern (`@RolesAllowed`)
+- [x] Admin- und schreibende Endpoints mit Keycloak/OIDC absichern
 
 ## Deployment (später)
 
